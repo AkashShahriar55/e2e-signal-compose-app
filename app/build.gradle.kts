@@ -8,12 +8,12 @@ plugins {
 }
 
 android {
-    namespace = "com.mobiledevpro.apptemplate.compose"
+    namespace = "com.nsa.e2echat.compose"
     compileSdk = libs.versions.sdk.compile.get().toInt()
 
 
     defaultConfig {
-        applicationId = "com.mobiledevpro"
+        applicationId = "com.nsa"
         minSdk = libs.versions.sdk.min.get().toInt()
         targetSdk = libs.versions.sdk.target.get().toInt()
         versionCode = libs.versions.app.version.code.get().toInt()
@@ -49,7 +49,7 @@ android {
 
         create("dev") {
             dimension = "default"
-            applicationIdSuffix = ".apptemplate.compose"
+            applicationIdSuffix = ".e2echat.compose"
         }
     }
 

@@ -1,7 +1,7 @@
-appId: com.mobiledevpro.apptemplate.compose
+appId: com.nsa.e2echat.compose
 ---
 - launchApp:
-        appId: "com.mobiledevpro.apptemplate.compose"
+        appId: "com.nsa.e2echat.compose"
         clearState: true
 - waitForAnimationToEnd:
         timeout: 1500
