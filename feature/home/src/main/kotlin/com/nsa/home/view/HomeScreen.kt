@@ -17,12 +17,17 @@
  */
 package com.nsa.home.view
 
+import android.widget.StackView
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import com.nsa.ui.component.ScreenBackground
 
 @Composable
@@ -31,14 +36,16 @@ fun HomeScreen(
     bottomBar: @Composable () -> Unit
 ) {
 
+
+
     Scaffold(
-        bottomBar = bottomBar,
-        contentWindowInsets = WindowInsets(left = 0, top = 0, right = 0, bottom = 0)
-    ) { paddingValues ->
+        bottomBar = bottomBar
+    ) {
         ScreenBackground(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(it)
+
         ) {
             nestedNavGraph.invoke()
         }

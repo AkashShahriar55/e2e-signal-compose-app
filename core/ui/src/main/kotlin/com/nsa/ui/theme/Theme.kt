@@ -10,6 +10,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -85,9 +86,13 @@ private val DarkColorScheme = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+private val LocalAppDimens = staticCompositionLocalOf {
+    normalDimensions
+}
+
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = true,
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -119,6 +124,12 @@ fun AppTheme(
     }
 }
 
+object AppTheme{
+    val dimens: Dimensions
+        @Composable
+        get() = LocalAppDimens.current
+}
+
 //TODO: it's temporary implementation. Dark mode value should be saved into preferences.
-val _darkModeState = MutableStateFlow(true)
+val _darkModeState = MutableStateFlow(false)
 val darkModeState: StateFlow<Boolean> = _darkModeState.asStateFlow()

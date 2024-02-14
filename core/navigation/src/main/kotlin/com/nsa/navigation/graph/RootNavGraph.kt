@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.nsa.navigation.Screen
+import com.nsa.navigation.authenticationGraph
 import com.nsa.navigation.ext.navigateTo
 import com.nsa.navigation.homeNavGraph
 import com.nsa.navigation.onBoardingNavGraph
@@ -51,9 +52,12 @@ fun RootNavGraph(
             navController.navigateUp()
         }
 
+
         //Nested Navigation Graphs
         onBoardingNavGraph(onNavigateToRoot = navController::navigateTo)
         homeNavGraph(onNavigateToRoot = navController::navigateTo)
+        authenticationGraph(onNavigateToRoot = navController::navigateTo)
+
 
         //Root screens
         subscriptionScreen(onNavigateBack = navigateBack)

@@ -21,13 +21,20 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.guru.fontawesomecomposelib.FaIcon
+import com.nsa.ui.R
 import com.nsa.ui.component.AppBottomBar
 import com.nsa.ui.component.AppBottomBarItem
 
@@ -48,7 +55,9 @@ fun HomeBottomNavigation(
     ) {
 
 
-        AppBottomBar {
+        AppBottomBar(
+            modifier = Modifier.fillMaxWidth()
+        ) {
 
             screens.forEach { screen ->
                 Log.d("navigation", "HomeBottomNavigation: hierarchy = $currentDestination")
@@ -61,11 +70,10 @@ fun HomeBottomNavigation(
                     onClick = { onNavigateTo(screen) },
                     icon = {
                         Icon(
-                            imageVector = screen.icon ?: Icons.Default.Warning,
+                            painter = painterResource(id = screen.icon),
                             contentDescription = null
                         )
-                    },
-                    label = { Text(text = screen.title ?: "") }
+                    }
                 )
             }
         }

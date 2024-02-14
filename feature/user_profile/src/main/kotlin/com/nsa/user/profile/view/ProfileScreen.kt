@@ -76,7 +76,8 @@ import com.nsa.ui.R as RUi
 @Composable
 fun ProfileScreen(
     state: StateFlow<UserProfileUIState>,
-    onNavigateToSubscription: () -> Unit
+    onNavigateToSubscription: () -> Unit,
+    onLogOut: () -> Unit
 ) {
     Log.d("navigation", "ProfileScreen:")
 
@@ -185,7 +186,7 @@ fun ProfileScreen(
                         label = "Log Out",
                         icon = Icons.Rounded.ExitToApp,
                         onClick = {
-
+                            onLogOut()
                         }
                     )
                 }
@@ -211,7 +212,8 @@ fun ProfileScreenPreview() {
     AppTheme(darkTheme = true) {
         ProfileScreen(
             state =  MutableStateFlow(UserProfileUIState.Success(fakeUser)),
-            onNavigateToSubscription = {}
+            onNavigateToSubscription = {},
+            onLogOut = {}
         )
     }
 }

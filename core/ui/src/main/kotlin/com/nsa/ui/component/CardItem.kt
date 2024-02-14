@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 fun CardItem(modifier: Modifier, content: @Composable ColumnScope.() -> Unit) {
     Card(
         modifier = modifier
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
             .fillMaxWidth()
             .wrapContentHeight(align = Alignment.Top),
         elevation = CardDefaults.cardElevation(2.dp),

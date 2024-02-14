@@ -40,13 +40,18 @@ const val navigationRoutePeopleProfile =
 
 const val navigationRouteSubscription = "subscription"
 
+const val navigationRouteAuth = "authentication"
+const val navigationRouteSignIn = "sign_in"
+const val navigationRouteSignInWithEmail = "sign_in_with_email"
+const val navigationRouteSignUp = "sign_up"
+
 sealed class Screen(
     val route: String,
     var routePath: String? = null,
     var clearBackStack: Boolean = false,
     val restoreState: Boolean = true,
     val title: String? = null,
-    val icon: ImageVector? = null
+    val icon: Int = com.nsa.ui.R.drawable.home_icon
 ) {
 
     fun withClearBackStack() = apply { clearBackStack = true }
@@ -64,17 +69,24 @@ sealed class Screen(
 
     // 3 tabs of Bottom navigation
     object ChatList :
-        Screen(route = navigationRouteChatList, title = "Chats", icon = Icons.Rounded.Home)
+        Screen(route = navigationRouteChatList, title = "Chats", icon = com.nsa.ui.R.drawable.chat_icon)
 
     object People : Screen(
         route = navigationRoutePeople,
         restoreState = false,
         title = "People",
-        icon = Icons.Rounded.Person,
+        icon = com.nsa.ui.R.drawable.favorite_icon,
     )
 
+    object Authentication : Screen(navigationRouteAuth)
+    object SignIn : Screen(navigationRouteSignIn)
+
+    object SignInWithEmail : Screen(navigationRouteSignInWithEmail)
+    object SignUp : Screen(navigationRouteSignUp)
+
+
     object Profile :
-        Screen(route = navigationRouteProfile, title = "Profile", icon = Icons.Rounded.Settings)
+        Screen(route = navigationRouteProfile, title = "Profile", icon = com.nsa.ui.R.drawable.profile_icon)
 
     object Subscription : Screen(navigationRouteSubscription)
 

@@ -17,7 +17,19 @@
  */
 package com.nsa.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,6 +37,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.nsa.ui.R
+import com.nsa.ui.theme.HeartIcon
+import com.nsa.ui.theme.LocatonIcon
+import com.nsa.ui.theme.WaveIcon
+import com.nsa.ui.theme.favorite_button_container_color
+import com.nsa.ui.theme.favorite_button_content_color
+import com.nsa.ui.theme.wave_button_container_color
 
 /**
  * For People list
@@ -41,25 +66,68 @@ fun ProfileContent(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = Modifier
+            .background(Color.White)
+            .padding(14.dp)
+            .fillMaxWidth()
+            ,
         horizontalAlignment = alignment
     ) {
-        CompositionLocalProvider(
-            LocalContentColor provides LocalContentColor.current.copy(alpha = if (isOnline) 1f else 0.4f)
-        ) {
 
+
+        Text(
+            text = "$userName,",
+            style = TextStyle(fontSize = 16.sp,fontWeight = FontWeight.Bold)
+        )
+
+        Row(
+            modifier = Modifier.padding(0.dp,8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            LocatonIcon()
+            Spacer(modifier = Modifier.width(5.dp))
             Text(
                 text = userName,
-                style = MaterialTheme.typography.bodyLarge
+                style = TextStyle(fontSize = 12.sp)
             )
+        }
+        
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Button(
+                modifier = Modifier
+                    .height(25.dp)
+                    .weight(1f),
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = favorite_button_container_color,
+                    contentColor = favorite_button_content_color,
+                    disabledContainerColor = favorite_button_container_color,
+                    disabledContentColor = favorite_button_content_color
+                )
+            ) {
+                HeartIcon()
+            }
+            
+            Spacer(modifier = Modifier.width(6.dp))
+
+            Button(
+                modifier = Modifier
+                    .height(25.dp)
+                    .weight(1f),
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = wave_button_container_color
+                )
+            ) {
+                WaveIcon()
+            }
         }
 
-        CompositionLocalProvider(LocalContentColor provides LocalContentColor.current.copy(alpha = 0.4F)) {
-            Text(
-                text = subName ?: if (isOnline) "Active now" else "Offline",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+       
+
+
     }
 
 }

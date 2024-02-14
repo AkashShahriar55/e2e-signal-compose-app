@@ -48,7 +48,7 @@ import com.nsa.ui.theme.red
 fun ProfilePicture(photoUri: Uri, onlineStatus: Boolean, size : ProfilePictureSize, modifier: Modifier = Modifier) {
     val pictureSizeDp = when(size) {
         ProfilePictureSize.SMALL -> 36.dp
-        ProfilePictureSize.MEDIUM -> 72.dp
+        ProfilePictureSize.MEDIUM -> 44.dp
         ProfilePictureSize.LARGE -> 144.dp
     }
 

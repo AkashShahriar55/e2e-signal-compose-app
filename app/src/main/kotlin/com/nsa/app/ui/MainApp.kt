@@ -29,7 +29,9 @@ fun MainApp() {
 
     RootNavGraph(
         navController = navController,
-        startDestination = Screen.Home
+        startDestination = Screen.Authentication
     )
+
+
 
 }

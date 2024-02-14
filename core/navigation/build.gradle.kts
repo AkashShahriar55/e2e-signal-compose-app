@@ -22,4 +22,6 @@ dependencies {
     implementation(projects.feature.chatList)
     implementation(projects.feature.people)
     implementation(projects.feature.userProfile)
+    implementation(projects.feature.signin)
+    implementation(projects.feature.signup)
 }

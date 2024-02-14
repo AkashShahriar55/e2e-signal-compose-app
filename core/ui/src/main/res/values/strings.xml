@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="icon_password_visible">Password Visible</string>
+    <string name="icon_password_hidden">Password Hidden</string>
+    <string name="empty_string" />
+</resources>

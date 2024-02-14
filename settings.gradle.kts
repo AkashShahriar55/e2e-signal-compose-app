@@ -1,9 +1,21 @@
+import java.net.URI
+
+include(":feature:favorites")
+
+
+include(":feature:find_people")
+
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven {
+            setUrl("https://jitpack.io")
+        }
+
     }
 }
 
@@ -12,6 +24,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            setUrl("https://jitpack.io")
+        }
     }
 }
 rootProject.name = "App-Template-Compose"
@@ -31,3 +46,5 @@ include(":feature:user_profile")
 include(":feature:people_profile")
 include(":feature:people")
 include(":core:di")
+include(":feature:signin")
+include(":feature:signup")

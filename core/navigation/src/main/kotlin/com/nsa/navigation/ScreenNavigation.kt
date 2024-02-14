@@ -34,6 +34,7 @@ import com.nsa.di.koinScope
 import com.nsa.home.view.HomeScreen
 import com.nsa.home.view.HomeViewModel
 import com.nsa.navigation.ext.navigateTo
+import com.nsa.navigation.graph.AuthenticationNavGraph
 import com.nsa.navigation.graph.HomeNavGraph
 import com.nsa.navigation.graph.OnBoardingNavGraph
 import com.nsa.navigation.graph.PeopleNavGraph
@@ -47,6 +48,14 @@ import com.nsa.people.profile.view.args.PeopleProfileArgs
 import com.nsa.people.view.PeopleScreen
 import com.nsa.peoplelist.view.PeopleListScreen
 import com.nsa.peoplelist.view.PeopleListViewModel
+import com.nsa.signin.EmailLoginScreen
+import com.nsa.signin.LoginLandingScreen
+import com.nsa.signin.LoginScreen
+import com.nsa.signin.LoginViewModel
+import com.nsa.signin.di.featureLoginModule
+import com.nsa.signup.RegistrationScreen
+import com.nsa.signup.RegistrationViewModel
+import com.nsa.signup.di.featureRegistrationModule
 import com.nsa.subscription.SubscriptionScreen
 import com.nsa.user.profile.di.featureUserProfileModule
 import com.nsa.user.profile.view.ProfileScreen
@@ -71,7 +80,8 @@ fun NavGraphBuilder.homeNavGraph(onNavigateToRoot: (Screen) -> Unit) {
                 screens = listOf(
                     Screen.ChatList,
                     Screen.People,
-                    Screen.Profile
+                    Screen.Profile,
+                    Screen.Profile,
                 ), onNavigateTo = navController::navigateTo,
                 currentDestination = navBackStackEntry?.destination
             )
@@ -244,8 +254,84 @@ fun NavGraphBuilder.profileScreen(onNavigateTo: (Screen) -> Unit) {
             state = viewModel.uiState,
             onNavigateToSubscription = {
                 onNavigateTo(Screen.Subscription)
+            },
+            onLogOut = { Screen.Authentication.withClearBackStack().also(onNavigateTo) }
+        )
+    }
+}
+
+
+fun NavGraphBuilder.authenticationGraph(onNavigateToRoot: (Screen) -> Unit) {
+    composable(
+        route = Screen.Authentication.route
+    ) {
+
+        val navController = rememberNavController()
+        AuthenticationNavGraph(
+            navController = navController,
+            onNavigateToRoot = onNavigateToRoot
+        )
+    }
+}
+
+fun NavGraphBuilder.signInScreen(onNavigateTo: (Screen) -> Unit,onNavigateToRoot: (Screen) -> Unit) {
+    composable(
+        route = Screen.SignIn.route
+    ) {
+
+        loadKoinModules(featureLoginModule)
+        val viewModel: LoginViewModel by koinScope<LoginViewModel>().inject()
+
+        LoginLandingScreen(
+            viewModel,
+            onNavigateToRegistration = { onNavigateTo(Screen.SignUp)},
+            onNavigateToLoginWithEmail = { onNavigateTo(Screen.SignInWithEmail) },
+            onNavigateToAuthenticatedRoute = {
+                Screen.Home.withClearBackStack()
+                    .also(onNavigateToRoot)
             }
         )
     }
 }
+
+fun NavGraphBuilder.signInWithEmailScreen(onNavigateTo: (Screen) -> Unit,onNavigateToRoot: (Screen) -> Unit,onNavigateBack: () -> Unit) {
+    composable(
+        route = Screen.SignInWithEmail.route
+    ) {
+
+        loadKoinModules(featureLoginModule)
+        val viewModel: LoginViewModel by koinScope<LoginViewModel>().inject()
+
+        EmailLoginScreen(
+            viewModel,
+            onNavigateBack = { onNavigateBack()},
+            onNavigateToForgotPassword = { /*TODO*/ },
+            onNavigateToAuthenticatedRoute = {
+                Screen.Home.withClearBackStack()
+                    .also(onNavigateToRoot)
+            }
+        )
+    }
+}
+
+fun NavGraphBuilder.signUpScreen(onNavigateBack: () -> Unit, onNavigateToRoot: (Screen) -> Unit) {
+    composable(
+        route = Screen.SignUp.route
+    ) {
+
+        loadKoinModules(featureRegistrationModule)
+        val viewModel: RegistrationViewModel by koinScope<RegistrationViewModel>().inject()
+
+        RegistrationScreen(
+            viewModel,
+            onNavigateBack = { onNavigateBack() },
+            onNavigateToAuthenticatedRoute = {
+                Screen.Home.withClearBackStack()
+                .also(onNavigateToRoot)
+            }
+        )
+    }
+}
+
+
 

@@ -18,11 +18,16 @@
 package com.nsa.peoplelist.view
 
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -124,14 +130,16 @@ private fun PeopleList(list: List<PeopleProfile>, onProfileClick: (profileId: In
     //Cause content is drawn edge-to-edge, let's set the top-padding for the first element in the list
     val statusBarHeight: Dp = WindowInsets.statusBarHeight().dp()
 
-    LazyColumn {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+    ) {
         itemsIndexed(
             items = list,
             key = { _, item -> item.listKey() }
         ) { index, profile ->
             ProfileCard(
                 modifier = Modifier.then(
-                    if (index == 0)
+                    if (index in 0..1)
                         Modifier.padding(top = statusBarHeight)
                     else
                         Modifier
