@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.nsa.ui.theme.AppTheme
+import java.util.UUID
 
 
 @Composable
@@ -98,7 +99,7 @@ private fun MyTabItem(
 @Composable
 fun CustomTab(
     selectedItemIndex: Int,
-    items: List<String>,
+    items: List<TabData>,
     modifier: Modifier = Modifier,
     onClick: (index: Int) -> Unit,
 ) {
@@ -130,7 +131,7 @@ fun CustomTab(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.clip(CircleShape),
             ) {
-                items.mapIndexed { index, text ->
+                items.mapIndexed { index, tabData ->
                     val isSelected = index == selectedItemIndex
                     MyTabItem(
                         isSelected = isSelected,
@@ -138,7 +139,7 @@ fun CustomTab(
                             onClick(index)
                         },
                         tabWidth = tabWidth,
-                        text = text,
+                        text = tabData.title,
                     )
                 }
             }
@@ -146,6 +147,12 @@ fun CustomTab(
 
     }
 }
+
+
+data class TabData(
+    val title:String,
+    val id:String = UUID.randomUUID().toString()
+)
 
 
 @Preview
@@ -158,7 +165,7 @@ fun CustomTabSample() {
     AppTheme {
         CustomTab(
             modifier = Modifier.fillMaxWidth(),
-            items = listOf("Near You", "New Matches"),
+            items = listOf(TabData("Near You"), TabData("New Matches")),
             selectedItemIndex = selected,
             onClick = setSelected,
         )

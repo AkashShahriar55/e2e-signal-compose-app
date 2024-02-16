@@ -19,6 +19,7 @@ package com.nsa.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -50,6 +51,7 @@ import com.nsa.ui.theme.WaveIcon
 import com.nsa.ui.theme.favorite_button_container_color
 import com.nsa.ui.theme.favorite_button_content_color
 import com.nsa.ui.theme.wave_button_container_color
+import com.nsa.ui.theme.wave_button_content_color
 
 /**
  * For People list
@@ -77,7 +79,7 @@ fun ProfileContent(
 
         Text(
             text = "$userName,",
-            style = TextStyle(fontSize = 16.sp,fontWeight = FontWeight.Bold)
+            style = TextStyle(fontSize = 14.sp,fontWeight = FontWeight.Bold)
         )
 
         Row(
@@ -96,6 +98,7 @@ fun ProfileContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(
+                contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
                     .height(25.dp)
                     .weight(1f),
@@ -113,15 +116,19 @@ fun ProfileContent(
             Spacer(modifier = Modifier.width(6.dp))
 
             Button(
+                contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
                     .height(25.dp)
                     .weight(1f),
                 onClick = { },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = wave_button_container_color
+                    containerColor = wave_button_container_color,
+                    contentColor = wave_button_content_color,
+                    disabledContainerColor = wave_button_container_color,
+                    disabledContentColor = wave_button_content_color
                 )
             ) {
-                WaveIcon()
+                Text("\uD83D\uDC4B", fontSize = 10.sp)
             }
         }
 

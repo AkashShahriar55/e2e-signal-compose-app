@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.nsa.navigation.Screen
 import com.nsa.navigation.chatListScreen
+import com.nsa.navigation.findPeopleScreen
 import com.nsa.navigation.peopleNavGraph
 import com.nsa.navigation.profileScreen
 
@@ -40,13 +41,14 @@ fun HomeNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.ChatList.route,
+        startDestination = Screen.FindPeople.route,
         modifier = modifier,
     ) {
 
+        findPeopleScreen(onNavigateToRoot)
         chatListScreen()
-        peopleNavGraph()
-        profileScreen(onNavigateTo = onNavigateToRoot)
+        peopleNavGraph(onNavigateToRoot)
+        profileScreen(onNavigateToRoot = onNavigateToRoot)
 
     }
 }

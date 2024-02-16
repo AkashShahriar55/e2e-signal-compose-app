@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -127,8 +128,6 @@ private fun Loading() {
 @Composable
 private fun PeopleList(list: List<PeopleProfile>, onProfileClick: (profileId: Int) -> Unit) {
 
-    //Cause content is drawn edge-to-edge, let's set the top-padding for the first element in the list
-    val statusBarHeight: Dp = WindowInsets.statusBarHeight().dp()
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -138,13 +137,6 @@ private fun PeopleList(list: List<PeopleProfile>, onProfileClick: (profileId: In
             key = { _, item -> item.listKey() }
         ) { index, profile ->
             ProfileCard(
-                modifier = Modifier.then(
-                    if (index in 0..1)
-                        Modifier.padding(top = statusBarHeight)
-                    else
-                        Modifier
-                ),
-
 
                 item = profile,
                 onClick = { onProfileClick(profile.id) })

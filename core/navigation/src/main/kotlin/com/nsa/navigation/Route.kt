@@ -30,6 +30,7 @@ const val navigationRouteOnBoardingSecond = "on_boarding_second"
 const val navigationRouteOnBoardingThird = "on_boarding_third"
 
 const val navigationRouteHome = "home"
+const val navigationRouteFindPeople = "find_people"
 const val navigationRouteChatList = "chat_list"
 const val navigationRouteProfile = "profile"
 
@@ -68,13 +69,18 @@ sealed class Screen(
     object Home : Screen(navigationRouteHome)
 
     // 3 tabs of Bottom navigation
+
+
+    object FindPeople :
+        Screen(route = navigationRouteFindPeople, title = "Find People", icon = com.nsa.ui.R.drawable.home_icon)
+
     object ChatList :
         Screen(route = navigationRouteChatList, title = "Chats", icon = com.nsa.ui.R.drawable.chat_icon)
 
     object People : Screen(
         route = navigationRoutePeople,
         restoreState = false,
-        title = "People",
+        title = "Favorites",
         icon = com.nsa.ui.R.drawable.favorite_icon,
     )
 

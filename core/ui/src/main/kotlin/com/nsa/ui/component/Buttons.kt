@@ -17,6 +17,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -109,6 +111,40 @@ fun CircularImageButton( onClick: () -> Unit){
 }
 
 
+@Composable
+fun RoundedBackButton( onClick: () -> Unit){
+    Icon(
+        modifier = Modifier
+            .clickable {
+                onClick()
+            }
+            .background(Color.White,shape = RoundedCornerShape(12.dp))
+            .padding(16.dp)
+            .size(14.dp),
+        imageVector = Icons.Filled.ArrowBackIosNew,
+        contentDescription = ""
+    )
+}
+
+
+@Composable
+fun RoundedSearchButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+){
+    Icon(
+        modifier = modifier
+            .clickable {
+                onClick()
+            }
+            .background(Color.White,shape = RoundedCornerShape(12.dp))
+            .padding(10.dp)
+            .size(24.dp),
+        imageVector = Icons.Filled.Search,
+        contentDescription = ""
+    )
+}
+
 
 @Preview
 @Composable
@@ -122,15 +158,16 @@ fun previewRoundedButton(){
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        RoundedCornerButton(
-            modifier = Modifier.background(Color.Red),
-            text = "something"
+        RoundedSearchButton(
+
         ) {
 
         }
     }
 
 }
+
+
 
 
 

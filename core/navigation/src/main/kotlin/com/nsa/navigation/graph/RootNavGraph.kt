@@ -26,6 +26,7 @@ import com.nsa.navigation.authenticationGraph
 import com.nsa.navigation.ext.navigateTo
 import com.nsa.navigation.homeNavGraph
 import com.nsa.navigation.onBoardingNavGraph
+import com.nsa.navigation.peopleProfileScreen
 import com.nsa.navigation.subscriptionScreen
 
 /**
@@ -58,6 +59,10 @@ fun RootNavGraph(
         homeNavGraph(onNavigateToRoot = navController::navigateTo)
         authenticationGraph(onNavigateToRoot = navController::navigateTo)
 
+        peopleProfileScreen(
+            onNavigateTo = navController::navigateTo,
+            onNavigateBack = navController::navigateUp
+        )
 
         //Root screens
         subscriptionScreen(onNavigateBack = navigateBack)

@@ -1,44 +1,72 @@
 package com.nsa.domain.model
 
-import android.net.Uri
 
-/**
- * Chat
- *
- * Created on May 06, 2023.
- *
- */
 data class Chat(
-    val user: UserProfile,
-    val peopleList: List<PeopleProfile>,
-    val unreadMsgCount : Int = 0
+    val id:Int,
+    val message:String,
+    val time:String,
+    val direction:Boolean
 )
 
-val fakeUser = UserProfile(
-    name = "Joe Black",
-    nickname = "@nickname",
-    status = true,
-    photo = Uri.parse("https://media.istockphoto.com/id/1090878494/photo/close-up-portrait-of-young-smiling-handsome-man-in-blue-polo-shirt-isolated-on-gray-background.jpg?b=1&s=170667a&w=0&k=20&c=c3TaqVe9-0EcHl7mjO-9YChSvGBDhvzUai6obs1Ibz4=")
-)
-
-val fakeChatList = arrayListOf(
+val chatList = listOf(
     Chat(
-        user = fakeUser,
-        peopleList = fakePeopleProfileList.take(5).sortedByDescending { !it.status },
-        unreadMsgCount = 100
+        1,
+        "Hey! How have you been?",
+        "12:15 PM",
+        true
     ),
     Chat(
-        user = fakeUser,
-        peopleList = fakePeopleProfileList.takeLast(3).sortedByDescending { !it.status },
-        unreadMsgCount = 0
+        2,
+        "Wanna catch up for a beer?",
+        "12:17 PM",
+        true
     ),
-
     Chat(
-        user = fakeUser,
-        peopleList = listOf(fakePeopleProfileList[6]),
-        unreadMsgCount = 3
-    )
+        3,
+        "Awesome! Let’s meet up",
+        "12:19 PM",
+        false
+    ),
+    Chat(
+        4,
+        "Can I also get my cousin along? Will that be okay?",
+        "12:20 PM",
+        false
+    ),
+    Chat(
+        5,
+        "Yeah sure! get him too.",
+        "12:21 PM",
+        true
+    ),
+    Chat(
+        6,
+        "Hey! How have you been?",
+        "12:15 PM",
+        false
+    ),
+    Chat(
+        7,
+        "Wanna catch up for a beer?",
+        "12:17 PM",
+        true
+    ),
+    Chat(
+        8,
+        "Awesome! Let’s meet up",
+        "12:19 PM",
+        false
+    ),
+    Chat(
+        9,
+        "Can I also get my cousin along? Will that be okay?",
+        "12:20 PM",
+        false
+    ),
+    Chat(
+        10,
+        "Yeah sure! get him too.",
+        "12:21 PM",
+        true
+    ),
 )
-
-fun Chat.name() : String =
-    this.peopleList.toChatName()

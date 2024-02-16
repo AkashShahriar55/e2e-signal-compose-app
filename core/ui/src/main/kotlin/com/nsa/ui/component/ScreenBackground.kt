@@ -37,9 +37,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ScreenBackground(
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.background,
     content: @Composable () -> Unit
 ) {
-    val color = MaterialTheme.colorScheme.background
 
     Surface(
         color = if (color == Color.Unspecified) Color.Transparent else color,

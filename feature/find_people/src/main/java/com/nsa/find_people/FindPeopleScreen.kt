@@ -2,12 +2,10 @@ package com.nsa.find_people
 
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -15,32 +13,26 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nsa.ui.component.CustomTab
 import com.nsa.ui.component.ProfilePicture
 import com.nsa.ui.component.ProfilePictureSize
-import com.nsa.ui.component.ScreenBackground
+import com.nsa.ui.component.TabData
 import com.nsa.ui.theme.AppTheme
 import com.nsa.ui.theme.BellIcon
 import com.nsa.ui.theme.LocatonIcon
@@ -48,19 +40,24 @@ import com.nsa.ui.theme.LocatonIcon
 
 @Composable
 fun FindPeopleScreen(
-
+    PeopleListView: @Composable () -> Unit
 ) {
 
     val (selected, setSelected) = remember {
         mutableStateOf(0)
     }
 
+
+    val items = listOf(
+        TabData("Near You","near_you"),
+        TabData("New Matches","new_matches")
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .navigationBarsPadding()
             .imePadding()
-            .padding(20.dp),
+            .padding(20.dp,20.dp,20.dp,0.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -69,10 +66,12 @@ fun FindPeopleScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            items = listOf("Near You", "New Matches"),
+            items = items,
             selectedItemIndex = selected,
             onClick = setSelected,
         )
+
+        PeopleListView.invoke()
 
     }
 
@@ -158,6 +157,6 @@ fun PreviewLoginScreen2() {
 
 
     AppTheme {
-        FindPeopleScreen()
+        FindPeopleScreen({})
     }
 }

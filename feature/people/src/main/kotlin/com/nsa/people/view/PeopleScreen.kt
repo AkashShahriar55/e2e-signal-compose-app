@@ -18,7 +18,17 @@
 package com.nsa.people.view
 
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 /**
  * Host for People list and People profile
@@ -28,10 +38,17 @@ import androidx.compose.runtime.Composable
  */
 @Composable
 fun PeopleScreen(
-    nestedNavGraph: @Composable () -> Unit
+    topBar: @Composable () -> Unit,
+    peopleListScreen: @Composable () -> Unit
 ) {
 
-    Log.d("navigation", "PeopleScreen: ")
 
-    nestedNavGraph.invoke()
+    Column(
+        modifier = Modifier.padding(20.dp,20.dp,20.dp,0.dp),
+    ) {
+        topBar()
+        peopleListScreen()
+    }
 }
+
+

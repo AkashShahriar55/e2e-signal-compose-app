@@ -24,4 +24,5 @@ dependencies {
     implementation(projects.feature.userProfile)
     implementation(projects.feature.signin)
     implementation(projects.feature.signup)
+    implementation(projects.feature.findPeople)
 }

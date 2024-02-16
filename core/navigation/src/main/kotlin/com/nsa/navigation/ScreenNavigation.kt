@@ -31,13 +31,13 @@ import androidx.navigation.navArgument
 import com.nsa.chatlist.view.ChatListScreen
 import com.nsa.chatlist.view.ChatListViewModel
 import com.nsa.di.koinScope
+import com.nsa.find_people.FindPeopleScreen
 import com.nsa.home.view.HomeScreen
 import com.nsa.home.view.HomeViewModel
 import com.nsa.navigation.ext.navigateTo
 import com.nsa.navigation.graph.AuthenticationNavGraph
 import com.nsa.navigation.graph.HomeNavGraph
 import com.nsa.navigation.graph.OnBoardingNavGraph
-import com.nsa.navigation.graph.PeopleNavGraph
 import com.nsa.onboarding.view.OnBoardingFirstScreen
 import com.nsa.onboarding.view.OnBoardingScreen
 import com.nsa.onboarding.view.OnBoardingSecondScreen
@@ -50,13 +50,13 @@ import com.nsa.peoplelist.view.PeopleListScreen
 import com.nsa.peoplelist.view.PeopleListViewModel
 import com.nsa.signin.EmailLoginScreen
 import com.nsa.signin.LoginLandingScreen
-import com.nsa.signin.LoginScreen
 import com.nsa.signin.LoginViewModel
 import com.nsa.signin.di.featureLoginModule
 import com.nsa.signup.RegistrationScreen
 import com.nsa.signup.RegistrationViewModel
 import com.nsa.signup.di.featureRegistrationModule
 import com.nsa.subscription.SubscriptionScreen
+import com.nsa.ui.component.SimpleTopBar
 import com.nsa.user.profile.di.featureUserProfileModule
 import com.nsa.user.profile.view.ProfileScreen
 import com.nsa.user.profile.view.vm.ProfileViewModel
@@ -78,9 +78,9 @@ fun NavGraphBuilder.homeNavGraph(onNavigateToRoot: (Screen) -> Unit) {
             Log.d("navigation", "homeNavGraph:bottomBar")
             HomeBottomNavigation(
                 screens = listOf(
-                    Screen.ChatList,
+                    Screen.FindPeople,
                     Screen.People,
-                    Screen.Profile,
+                    Screen.ChatList,
                     Screen.Profile,
                 ), onNavigateTo = navController::navigateTo,
                 currentDestination = navBackStackEntry?.destination
@@ -136,19 +136,29 @@ fun NavGraphBuilder.onBoardingNavGraph(onNavigateToRoot: (Screen) -> Unit) {
     }
 }
 
-fun NavGraphBuilder.peopleNavGraph() {
+fun NavGraphBuilder.peopleNavGraph(onNavigateToRoot: (Screen) -> Unit) {
     composable(
         route = Screen.People.route
     ) {
-        val navController = rememberNavController()
 
-        val nestedNavGraph: @Composable () -> Unit = {
-            PeopleNavGraph(
-                navController = navController
+        val viewModel: PeopleListViewModel = viewModel()
+
+        val simpleTopBar: @Composable () -> Unit = {
+            SimpleTopBar(
+                title = Screen.People.title ?: ""
             )
         }
 
-        PeopleScreen(nestedNavGraph)
+
+        PeopleScreen(simpleTopBar){
+            PeopleListScreen(
+                viewModel.uiState,
+                onNavigateToProfile = { profileId: Int ->
+                    Screen.PeopleProfile.routeWith(profileId.toString())
+                        .also(onNavigateToRoot)
+                }
+            )
+        }
     }
 }
 
@@ -184,6 +194,27 @@ fun NavGraphBuilder.subscriptionScreen(onNavigateBack: () -> Unit) {
     }
 }
 
+
+fun NavGraphBuilder.findPeopleScreen(onNavigateToRoot: (Screen) -> Unit) {
+    composable(
+        route = Screen.FindPeople.route
+    ) {
+
+        val viewModel: PeopleListViewModel = viewModel()
+
+        FindPeopleScreen(){
+            PeopleListScreen(
+                stateFlow = viewModel.uiState,
+                onNavigateToProfile = { profileId: Int ->
+                    Screen.PeopleProfile.routeWith(profileId.toString())
+                        .also(onNavigateToRoot)
+                }
+            )
+        }
+    }
+}
+
+
 fun NavGraphBuilder.chatListScreen() {
     composable(
         route = Screen.ChatList.route
@@ -193,7 +224,7 @@ fun NavGraphBuilder.chatListScreen() {
 
         ChatListScreen(
             state = viewModel.uiState,
-            onClick = { chat ->
+            onClick = {
                 //TODO: open chat screen
             }
         )
@@ -208,7 +239,7 @@ fun NavGraphBuilder.peopleListScreen(onNavigateTo: (Screen) -> Unit) {
         val viewModel: PeopleListViewModel = viewModel()
 
         PeopleListScreen(
-            viewModel.uiState,
+            stateFlow = viewModel.uiState,
             onNavigateToProfile = { profileId: Int ->
                 Screen.PeopleProfile.routeWith(profileId.toString())
                     .also(onNavigateTo)
@@ -242,7 +273,7 @@ fun NavGraphBuilder.peopleProfileScreen(
 }
 
 
-fun NavGraphBuilder.profileScreen(onNavigateTo: (Screen) -> Unit) {
+fun NavGraphBuilder.profileScreen(onNavigateToRoot: (Screen) -> Unit) {
     composable(
         route = Screen.Profile.route
     ) {
@@ -253,9 +284,9 @@ fun NavGraphBuilder.profileScreen(onNavigateTo: (Screen) -> Unit) {
         ProfileScreen(
             state = viewModel.uiState,
             onNavigateToSubscription = {
-                onNavigateTo(Screen.Subscription)
+                onNavigateToRoot(Screen.Subscription)
             },
-            onLogOut = { Screen.Authentication.withClearBackStack().also(onNavigateTo) }
+            onLogOut = { Screen.Authentication.withClearBackStack().also(onNavigateToRoot) }
         )
     }
 }

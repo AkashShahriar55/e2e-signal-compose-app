@@ -57,11 +57,10 @@ import com.nsa.ui.theme.AppTheme
 internal fun ProfileCard(modifier: Modifier = Modifier, item: PeopleProfile, onClick: () -> Unit) {
     CardItem(
         modifier = modifier
-            .clickable { onClick.invoke() }
     ) {
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clickable { onClick.invoke() },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {

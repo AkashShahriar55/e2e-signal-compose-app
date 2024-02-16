@@ -26,19 +26,48 @@ import android.net.Uri
  *
  */
 
+
+
+
+
 data class PeopleProfile(
     val id: Int,
     val name: String,
     val status: Boolean,
     val photo: Uri? = null,
     val age:Int,
-    val location:String
+    val location:String,
+    val about:String = "",
+    val interest:List<String> = listOf(),
+    val gallary:List<Uri> = listOf(),
+    val distance:String = "0.0 km"
 ) {
     fun listKey(): String = "${id}_${name.replace("\\s+".toRegex(), "")}"
 }
 
 
 val fakePeopleProfileList = arrayListOf(
+    PeopleProfile(
+        id = 11,
+        name = "Lily James",
+        status = true,
+        photo = Uri.parse("https://images.unsplash.com/flagged/photo-1571837360114-edf5dba7b1dd?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+        29,
+        "Spain",
+        about = "Fun and adventurous. I'm not afraid to try new things and I love to be spontaneous. I want someone who is always up for an adventure, whether it's trying a new restaurant, going on a hike, or traveling to a new country.\n",
+        interest = listOf("Art","Sports","Design","Photography","Coffee","Chocolates"),
+        gallary = listOf(
+            Uri.parse("https://images.unsplash.com/photo-1608312149553-d31a9cbc5224?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+            Uri.parse("https://images.unsplash.com/photo-1563987219716-dac41f2d0b3a?q=80&w=1518&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+            Uri.parse("https://images.unsplash.com/photo-1567874250401-1a63635a1171?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+            Uri.parse("https://images.unsplash.com/photo-1589042665482-aae96eac94af?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+            Uri.parse("https://images.unsplash.com/photo-1591167068512-e96853b5a458?q=80&w=1365&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+            Uri.parse("https://images.unsplash.com/photo-1589220840325-df26ed81a09f?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+            Uri.parse("https://images.unsplash.com/photo-1589220840325-df26ed81a09f?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+//            Uri.parse("https://images.unsplash.com/photo-1589220840325-df26ed81a09f?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+        ),
+        distance = "2.3 km"
+    ),
     PeopleProfile(
         id = 0,
         name = "Michaela Runnings",
@@ -111,7 +140,7 @@ val fakePeopleProfileList = arrayListOf(
         "Russia"
     ),
     PeopleProfile(
-        id = 8,
+        id = 12,
         name = "Matt Dengo",
         status = false,
         Uri.parse("https://images.unsplash.com/photo-1578176603894-57973e38890f?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTE0fHxwb3J0cmFpdHxlbnwwfDJ8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),

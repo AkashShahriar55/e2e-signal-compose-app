@@ -17,7 +17,7 @@
  */
 package com.nsa.chatlist.view
 
-import com.nsa.domain.model.Chat
+import com.nsa.domain.model.ChatList
 
 /**
  * UI state for [com.nsa.chatlist.view.ChatListScreen]
@@ -31,7 +31,7 @@ sealed interface ChatListUIState {
 
     object Loading : ChatListUIState
 
-    class Success(val profileList : List<Chat>) : ChatListUIState
+    class Success(val profileList : List<ChatList>) : ChatListUIState
 
     class Fail(val throwable: Throwable) : ChatListUIState
 }
