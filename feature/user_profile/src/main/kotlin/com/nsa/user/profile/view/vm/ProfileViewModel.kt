@@ -19,17 +19,22 @@ package com.nsa.user.profile.view.vm
 
 import androidx.lifecycle.viewModelScope
 import com.nsa.domain.model.fakeUser
+import com.nsa.ui.event.UIEvent
 import com.nsa.ui.vm.BaseViewModel
 import com.nsa.user.profile.domain.interactor.UserProfileInteractor
+import com.nsa.user.profile.view.UserProfileUIEvent
 import com.nsa.user.profile.view.state.UserProfileUIState
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val interactor: UserProfileInteractor
-) : BaseViewModel<UserProfileUIState>() {
+) : BaseViewModel<UserProfileUIState,UserProfileUIEvent>() {
 
     override fun initUIState(): UserProfileUIState = UserProfileUIState.Empty
+    override fun onUiEvent(event: UserProfileUIEvent) {
+
+    }
 
     init {
         observeUserProfile()

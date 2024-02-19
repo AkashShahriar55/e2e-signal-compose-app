@@ -1,30 +1,32 @@
 package com.nsa.signup.state
 
+import com.nsa.domain.model.UiText
 import com.nsa.signup.R
 import com.nsa.ui.state.ErrorState
 
 
 val emailEmptyErrorState = ErrorState(
     hasError = true,
-    errorMessageStringResource = R.string.registration_error_msg_empty_email
+    errorMessage =R.string.registration_error_msg_empty_email
 )
 
-val mobileNumberEmptyErrorState = ErrorState(
+val nameEmptyErrorState = ErrorState(
     hasError = true,
-    errorMessageStringResource = R.string.registration_error_msg_empty_mobile
+    errorMessage = R.string.registration_error_msg_empty_name
 )
 
 val passwordEmptyErrorState = ErrorState(
     hasError = true,
-    errorMessageStringResource = R.string.registration_error_msg_empty_password
+    errorMessage = R.string.registration_error_msg_empty_password
 )
 
 val confirmPasswordEmptyErrorState = ErrorState(
     hasError = true,
-    errorMessageStringResource = R.string.registration_error_msg_empty_confirm_password
+    errorMessage = R.string.registration_error_msg_empty_confirm_password
+
 )
 
 val passwordMismatchErrorState = ErrorState(
     hasError = true,
-    errorMessageStringResource = R.string.registration_error_msg_password_mismatch
+    errorMessage = R.string.registration_error_msg_password_mismatch
 )

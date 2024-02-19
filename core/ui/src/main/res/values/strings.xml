@@ -3,4 +3,9 @@
     <string name="icon_password_visible">Password Visible</string>
     <string name="icon_password_hidden">Password Hidden</string>
     <string name="empty_string" />
+
+    <string name="email_error">Please enter a valid email</string>
+
+    <string name="password_error">Please enter a valid password</string>
+
 </resources>

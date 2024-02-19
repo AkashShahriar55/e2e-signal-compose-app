@@ -28,6 +28,7 @@ fun MediumTitleText(
     text: String,
     textAlign: TextAlign = TextAlign.Start
 ) {
+
     Text(
         modifier = modifier,
         text = text,

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="strTheEmailCanNotBeBlank">The Email Cannot be blank</string>
+    <string name="strThatsNotAValidEmail">That\'s not a valid email</string>
+    <string name="strThePasswordNeedsToConsistOfAtLeastEightCharacters">The password needs to consist of at least eight characters</string>
+    <string name="strThePasswordNeedsToContainAtLeastOneLetterAndDigit">The password needs to contain at least one letter and digit</string>
+    <string name="empty" />
+</resources>

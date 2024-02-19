@@ -33,4 +33,5 @@ sealed interface UserProfileUIState : UIState {
     class Success(val userProfile: UserProfile) : UserProfileUIState
 
     class Fail(val throwable: Throwable) : UserProfileUIState
+
 }

@@ -13,4 +13,7 @@
     <string name="register">Register</string>
 
     <string name="jetpack_compose">Jetpack Compose</string>
+
+    <string name="connect_friends">Connect friends <b>easily &amp; quickly</b></string>
+    <string name="our_chat_app">Our chat app is the perfect way to stay connected with friends and family.</string>
 </resources>

@@ -41,6 +41,7 @@ import com.nsa.ui.R
 
 @Composable
 fun FacebookIcon(modifier: Modifier = Modifier) {
+
     Image(
         modifier = modifier,
         painter = painterResource(id = R.drawable.facebook), // Replace "your_vector_asset" with the actual name of your vector asset resource
@@ -61,7 +62,7 @@ fun GoogleIcon(modifier: Modifier = Modifier) {
 
 @Composable
 fun AppleIconLight(modifier: Modifier = Modifier) {
-    Image(
+    Icon(
         modifier = modifier,
         painter = painterResource(id = R.drawable.apple), // Replace "your_vector_asset" with the actual name of your vector asset resource
         contentDescription = "Apple Icon" // Provide a description for accessibility

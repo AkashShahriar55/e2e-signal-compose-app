@@ -6,4 +6,5 @@ dependencies {
     api(libs.coil)
     api(libs.lottie)
     implementation(libs.fontawsome)
+    api(projects.core.domain)
 }

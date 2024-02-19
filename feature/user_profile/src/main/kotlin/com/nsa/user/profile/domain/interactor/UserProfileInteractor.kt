@@ -24,4 +24,6 @@ package com.nsa.user.profile.domain.interactor
  *
  */
 interface UserProfileInteractor {
+
+
 }

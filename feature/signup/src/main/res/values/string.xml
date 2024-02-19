@@ -12,7 +12,7 @@
     <string name="navigate_back">Navigate to the previous screen</string>
 
     <string name="registration_error_msg_empty_email">Please enter your email id</string>
-    <string name="registration_error_msg_empty_mobile">Please enter your mobile number</string>
+    <string name="registration_error_msg_empty_name">Please enter your name</string>
     <string name="registration_error_msg_empty_password">Please enter your password</string>
     <string name="registration_error_msg_empty_confirm_password">Please confirm your password</string>
     <string name="registration_error_msg_password_mismatch">Please enter the same password here as above</string>

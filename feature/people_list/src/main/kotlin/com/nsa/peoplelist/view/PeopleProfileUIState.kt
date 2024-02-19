@@ -25,6 +25,19 @@ import com.nsa.domain.model.PeopleProfile
  * Created on Feb 04, 2023.
  *
  */
+
+sealed interface BaseUIState{
+
+    object Empty : BaseUIState
+
+    object Loading : BaseUIState
+    class Success<T>(val data:T):BaseUIState
+
+    class Fail(val throwable: Throwable) : BaseUIState
+
+}
+
+
 sealed interface PeopleProfileUIState {
 
     object Empty : PeopleProfileUIState
@@ -35,3 +48,5 @@ sealed interface PeopleProfileUIState {
 
     class Fail(val throwable: Throwable) : PeopleProfileUIState
 }
+
+

@@ -1,4 +1,4 @@
-package com.jodhpurtechies.composelogin.ui.screens.unauthenticated.login.state
+package com.nsa.signin.state
 
 
 import com.nsa.ui.state.ErrorState
@@ -7,10 +7,11 @@ import com.nsa.ui.state.ErrorState
  * Login State holding ui input values
  */
 data class LoginState(
-    val emailOrMobile: String = "",
+    val email: String = "",
     val password: String = "",
     val errorState: LoginErrorState = LoginErrorState(),
-    val isLoginSuccessful: Boolean = false
+    val isLoginSuccessful: Boolean = false,
+    val isSubmitButtonEnabled:Boolean = false
 )
 
 /**

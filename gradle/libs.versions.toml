@@ -22,7 +22,7 @@ lifecycle = "2.7.0"
 compose-bom = "2024.01.00"
 compose-compiler = "1.5.8"
 coil = "2.5.0"
-material3 = "1.1.2"
+material3 = "1.2.0"
 material = "1.4.3"
 koin = "3.5.3"
 koin-compose = "3.5.3"
@@ -43,6 +43,8 @@ lottie = "6.1.0"
 appcompat = "1.6.1"
 com-google-android-material-material = "1.11.0"
 fontawsome = "1.0.0"
+compose_form = "0.2.8"
+annotation-jvm = "1.7.1"
 
 [plugins]
 
@@ -95,7 +97,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 #3rd party libs
 lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 fontawsome = {module = "com.github.Gurupreet:FontAwesomeCompose",version.ref = "fontawsome"}
-
+compose_form = {module = "com.github.benjamin-luescher:compose-form",version.ref = "compose_form"}
 # Koin for dependency injection
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
@@ -103,6 +105,7 @@ koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = 
 koin-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version.ref = "koin-compose" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "com-google-android-material-material" }
+androidx-annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", version.ref = "annotation-jvm" }
 
 
 

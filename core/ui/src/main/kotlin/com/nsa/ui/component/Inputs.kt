@@ -1,5 +1,6 @@
 package com.nsa.ui.component
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +29,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,7 +50,6 @@ import com.airbnb.lottie.model.content.RectangleShape
 import com.guru.fontawesomecomposelib.FaIcon
 import com.guru.fontawesomecomposelib.FaIcons
 import com.nsa.ui.R
-
 
 @Composable
 fun PasswordTextField(
@@ -79,7 +80,6 @@ fun PasswordTextField(
             IconButton(onClick = {
                 isPasswordVisible = !isPasswordVisible
             }) {
-
 
                 val visibleIconAndText = FaIcons.Eye
 
@@ -120,13 +120,15 @@ fun PasswordTextField(
 @Composable
 fun EmailTextField(
     modifier: Modifier = Modifier,
+    label: String,
     value: String,
     onValueChange: (String) -> Unit,
-    label: String,
     isError: Boolean = false,
     errorText: String = "",
     imeAction: ImeAction = ImeAction.Next
 ) {
+
+    Log.d("check_input", "EmailTextField: $value")
 
     TextField(
         modifier = modifier,
