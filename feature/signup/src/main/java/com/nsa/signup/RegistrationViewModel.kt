@@ -52,9 +52,10 @@ class RegistrationViewModel  : BaseViewModel<RegistrationUiState, RegistrationUi
                                 ErrorState()
                             }
 
-                        )
+                        ),
                     )
                 }
+                checkSubmitButtonEnabled()
             }
 
             // Mobile Number changed event
@@ -73,9 +74,10 @@ class RegistrationViewModel  : BaseViewModel<RegistrationUiState, RegistrationUi
                                 ErrorState()
                             }
 
-                        )
+                        ),
                     )
                 }
+                checkSubmitButtonEnabled()
             }
 
             // Password changed event
@@ -92,9 +94,10 @@ class RegistrationViewModel  : BaseViewModel<RegistrationUiState, RegistrationUi
                                 ErrorState()
                             }
 
-                        )
+                        ),
                     )
                 }
+                checkSubmitButtonEnabled()
             }
 
             // Confirm Password changed event
@@ -118,9 +121,10 @@ class RegistrationViewModel  : BaseViewModel<RegistrationUiState, RegistrationUi
                                 // Valid state
                                 else -> ErrorState()
                             }
-                        )
+                        ),
                     )
                 }
+                checkSubmitButtonEnabled()
             }
 
 
@@ -130,13 +134,31 @@ class RegistrationViewModel  : BaseViewModel<RegistrationUiState, RegistrationUi
                     val inputsValidated = validateInputs()
                     if (inputsValidated) {
                         // TODO Trigger registration in authentication flow
-                        _registrationState.update{
-                            registrationState.value.copy(isRegistrationSuccessful = true)
-                        }
+                        registration()
 
                     }
                 }
 
+            }
+        }
+    }
+
+
+    private fun checkSubmitButtonEnabled(){
+        if(_registrationState.value.name.isNotEmpty()
+            &&  _registrationState.value.email.isNotEmpty()
+            &&  _registrationState.value.password.isNotEmpty()
+            &&  _registrationState.value.confirmPassword.isNotEmpty()){
+            _registrationState.update{
+                it.copy(
+                    submitButtonEnabled = true
+                )
+            }
+        }else{
+            _registrationState.update{
+                it.copy(
+                    submitButtonEnabled = false
+                )
             }
         }
     }

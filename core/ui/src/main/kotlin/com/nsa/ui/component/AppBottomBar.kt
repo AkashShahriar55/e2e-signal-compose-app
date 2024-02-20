@@ -75,7 +75,7 @@ fun AppBottomBar(
 
     MyNavigationBar(
         modifier = modifier,
-        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        contentColor = MaterialTheme.colorScheme.inverseOnSurface,
         tonalElevation = 4.dp,
         content = content
     )
@@ -95,7 +95,7 @@ fun MyNavigationBar(
 
 
     Surface(
-        color = MaterialTheme.colorScheme.inversePrimary,
+        color = MaterialTheme.colorScheme.inverseSurface,
         contentColor = contentColor,
         tonalElevation = tonalElevation,
         modifier = modifier
@@ -159,7 +159,7 @@ fun RowScope.AppBottomBarItem(
 @Preview(showBackground = true)
 @Composable
 fun PreviewRegistrationScreen() {
-    AppTheme(darkTheme = true) {
+    AppTheme() {
         AppBottomBar(
             modifier = Modifier.background(Color.Transparent)
         ) {

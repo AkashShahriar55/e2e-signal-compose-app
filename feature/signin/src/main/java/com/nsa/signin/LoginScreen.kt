@@ -3,7 +3,9 @@ package com.nsa.signin
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -130,6 +132,8 @@ fun  LoginLandingScreen(
     onNavigateToLoginWithEmail: () -> Unit,
     onNavigateToAuthenticatedRoute: () -> Unit
 ) {
+
+
 
 
     val uiState by loginViewModel.uiState.collectAsStateWithLifecycle()
@@ -285,6 +289,8 @@ fun EmailLoginScreen(
     onNavigateBack: () -> Unit
 ) {
 
+    val scrollableState = rememberScrollState()
+
     val loginState by loginViewModel.loginState.collectAsStateWithLifecycle()
 
     val uiState by loginViewModel.uiState.collectAsStateWithLifecycle()
@@ -324,8 +330,10 @@ fun EmailLoginScreen(
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
-            }
+            },
+            contentWindowInsets = WindowInsets.Companion.statusBars
         ){ it ->
+            it
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -333,6 +341,7 @@ fun EmailLoginScreen(
                     .imePadding()
                     .padding(it)
                     .padding(20.dp)
+                    .verticalScroll(scrollableState)
                 ,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -401,18 +410,7 @@ fun EmailLoginScreen(
 
 
 
-
-
-
-                }
-
-
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ){
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.height(170.dp))
                     Button(
                         enabled = loginState.isSubmitButtonEnabled,
                         modifier = Modifier
@@ -440,7 +438,11 @@ fun EmailLoginScreen(
                         text = "Forgot password?",
                         style = MaterialTheme.typography.titleMedium
                     )
+
+
+
                 }
+
 
 
 

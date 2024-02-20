@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -52,7 +53,6 @@ fun RegistrationScreen(
 
 
     val scrollableState = rememberScrollState()
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
 
     val registrationState by registrationViewModel.registrationState.collectAsStateWithLifecycle()
 
@@ -85,7 +85,8 @@ fun RegistrationScreen(
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
-            }
+            },
+            contentWindowInsets = WindowInsets.Companion.statusBars
         ){ it ->
             Column(
                 modifier = Modifier
@@ -136,15 +137,7 @@ fun RegistrationScreen(
 
 
                     NameTextField(
-                        modifier = Modifier.fillMaxWidth()
-                            .onFocusEvent {
-                                focusState ->
-                                if(focusState.isFocused){
-                                    scope.launch{
-                                        bringIntoViewRequester.bringIntoView()
-                                    }
-                                }
-                            },
+                        modifier = Modifier.fillMaxWidth(),
 
                         onValueChange = { value->
                             registrationViewModel.onUiEvent(RegistrationUiEvent.NameChanged(value))
@@ -157,15 +150,7 @@ fun RegistrationScreen(
 
 
                     EmailTextField(
-                        modifier = Modifier.fillMaxWidth()
-                            .onFocusEvent {
-                                    focusState ->
-                                if(focusState.isFocused){
-                                    scope.launch{
-                                        bringIntoViewRequester.bringIntoView()
-                                    }
-                                }
-                            },
+                        modifier = Modifier.fillMaxWidth(),
                         onValueChange = { value->
                             registrationViewModel.onUiEvent(RegistrationUiEvent.EmailChanged(value))
                         },
@@ -176,15 +161,7 @@ fun RegistrationScreen(
                     )
 
                     PasswordTextField(
-                        modifier = Modifier.fillMaxWidth()
-                            .onFocusEvent {
-                                    focusState ->
-                                if(focusState.isFocused){
-                                    scope.launch{
-                                        bringIntoViewRequester.bringIntoView()
-                                    }
-                                }
-                            },
+                        modifier = Modifier.fillMaxWidth(),
                         onValueChange = { value->
                             registrationViewModel.onUiEvent(RegistrationUiEvent.PasswordChanged(value))
                         },
@@ -195,15 +172,7 @@ fun RegistrationScreen(
                     )
 
                     PasswordTextField(
-                        modifier = Modifier.fillMaxWidth()
-                            .onFocusEvent {
-                                    focusState ->
-                                if(focusState.isFocused){
-                                    scope.launch{
-                                        bringIntoViewRequester.bringIntoView()
-                                    }
-                                }
-                            },
+                        modifier = Modifier.fillMaxWidth(),
                         onValueChange = { value->
                             registrationViewModel.onUiEvent(RegistrationUiEvent.ConfirmPasswordChanged(value))
                         },
@@ -217,9 +186,9 @@ fun RegistrationScreen(
 
 
 
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.height(120.dp))
                     Button(
-                        enabled = false,
+                        enabled = registrationState.submitButtonEnabled,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 10.dp)

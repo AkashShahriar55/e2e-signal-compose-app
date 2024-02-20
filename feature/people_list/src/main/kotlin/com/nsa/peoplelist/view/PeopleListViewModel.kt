@@ -38,6 +38,8 @@ class PeopleListViewModel : ViewModel() {
         observePeopleList()
     }
 
+
+
     private fun observePeopleList() {
         viewModelScope.launch {
 

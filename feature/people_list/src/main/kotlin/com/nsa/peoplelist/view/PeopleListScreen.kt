@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nsa.domain.model.PeopleProfile
+import com.nsa.domain.model.fakePeopleProfileList
 import com.nsa.peoplelist.view.component.ProfileCard
 import com.nsa.ui.component.ScreenBackground
 import com.nsa.ui.ext.dp
@@ -126,7 +127,10 @@ private fun Loading() {
 }
 
 @Composable
-private fun PeopleList(list: List<PeopleProfile>, onProfileClick: (profileId: Int) -> Unit) {
+private fun PeopleList(
+    list: List<PeopleProfile>,
+    onProfileClick: (profileId: Int) -> Unit
+) {
 
 
     LazyVerticalGrid(
@@ -150,7 +154,7 @@ private fun PeopleList(list: List<PeopleProfile>, onProfileClick: (profileId: In
 fun PeopleListPreview() {
     AppTheme {
         PeopleListScreen(
-            stateFlow = MutableStateFlow(PeopleProfileUIState.Empty),
+            stateFlow = MutableStateFlow(PeopleProfileUIState.Success(fakePeopleProfileList)),
             onNavigateToProfile = { }
         )
     }
