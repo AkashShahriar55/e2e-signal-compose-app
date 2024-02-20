@@ -32,7 +32,7 @@ abstract class BaseCoroutinesUseCase<Results, in Params>(
     executionDispatcher: CoroutineDispatcher
 ) : BaseUseCase(executionDispatcher) {
 
-    abstract suspend fun buildUseCase(params: Params? = null): Results
+    protected abstract suspend fun buildUseCase(params: Params? = null): Results
 
     suspend fun execute(params: Params? = null): Result<Results> =
         withContext(dispatcher) {

@@ -18,6 +18,7 @@
 package com.nsa.peoplelist.view
 
 import com.nsa.domain.model.PeopleProfile
+import com.nsa.ui.state.UIState
 
 /**
  * UI state for [com.nsa.peoplelist.view.PeopleListScreen]
@@ -26,19 +27,8 @@ import com.nsa.domain.model.PeopleProfile
  *
  */
 
-sealed interface BaseUIState{
 
-    object Empty : BaseUIState
-
-    object Loading : BaseUIState
-    class Success<T>(val data:T):BaseUIState
-
-    class Fail(val throwable: Throwable) : BaseUIState
-
-}
-
-
-sealed interface PeopleProfileUIState {
+sealed interface PeopleProfileUIState:UIState {
 
     object Empty : PeopleProfileUIState
 

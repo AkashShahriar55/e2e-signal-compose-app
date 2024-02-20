@@ -35,7 +35,7 @@ abstract class BaseCoroutinesFLowUseCase<Results, in Params>(
     executionDispatcher: CoroutineDispatcher
 ) : BaseUseCase(executionDispatcher) {
 
-    abstract fun buildUseCaseFlow(params: Params? = null): Flow<Results>
+    protected abstract fun buildUseCaseFlow(params: Params? = null): Flow<Results>
 
     fun execute(params: Params? = null): Flow<Result<Results>> =
         try {

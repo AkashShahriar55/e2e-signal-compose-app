@@ -1,6 +1,7 @@
 package com.nsa.find_people
 
 import android.net.Uri
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,14 +14,18 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,28 +41,27 @@ import com.nsa.ui.component.TabData
 import com.nsa.ui.theme.AppTheme
 import com.nsa.ui.theme.BellIcon
 import com.nsa.ui.theme.LocatonIcon
+import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FindPeopleScreen(
-    PeopleListView: @Composable () -> Unit
+    NearYouListScreen: @Composable () -> Unit,
+    NewMatchesListScreen: @Composable () -> Unit,
 ) {
 
-    val (selected, setSelected) = remember {
-        mutableStateOf(0)
-    }
 
+    val scope = rememberCoroutineScope()
 
-    val items = listOf(
-        TabData("Near You","near_you"),
-        TabData("New Matches","new_matches")
-    )
+    val tabData = getTabList()
+    val pagerState = rememberPagerState(pageCount = { tabData.size })
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .imePadding()
-            .padding(20.dp,20.dp,20.dp,0.dp),
+            .padding(20.dp, 20.dp, 20.dp, 0.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -66,37 +70,35 @@ fun FindPeopleScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            items = items,
-            selectedItemIndex = selected,
-            onClick = setSelected,
+            items = tabData,
+            pagerState = pagerState,
+            onClick = {
+                scope.launch{
+                    pagerState.animateScrollToPage(it)
+                }
+
+            },
         )
 
-        PeopleListView.invoke()
-
-    }
-
-}
 
 
+        HorizontalPager(state = pagerState) {index ->
+            when(index){
+                0 ->{
+                    NearYouListScreen()
+                }
+                1->{
+                    NewMatchesListScreen()
+                }
+            }
 
-@Composable
-fun FindPeopleTab(selectedTab:Int,titles:List<String>) {
-    TabRow(selectedTabIndex = selectedTab) {
-        titles.forEachIndexed { index, title ->
-            Tab(
-                modifier = Modifier,
-                text = {
-                       Text(text = title)
-                },
-                selected = selectedTab == index,
-                onClick = {
-
-
-                },
-                selectedContentColor = MaterialTheme.colorScheme.primary
-            )
         }
+
+
+
+
     }
+
 }
 
 
@@ -150,6 +152,12 @@ fun UserProfileView(){
 }
 
 
+private fun getTabList(): List<TabData> {
+    return listOf(
+        TabData("Near You","near_you"),
+        TabData("New Matches","new_matches")
+    )
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -157,6 +165,6 @@ fun PreviewLoginScreen2() {
 
 
     AppTheme {
-        FindPeopleScreen({})
+        FindPeopleScreen({},{})
     }
 }

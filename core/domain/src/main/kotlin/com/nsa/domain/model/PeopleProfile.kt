@@ -40,7 +40,8 @@ data class PeopleProfile(
     val about:String = "",
     val interest:List<String> = listOf(),
     val gallary:List<Uri> = listOf(),
-    val distance:String = "0.0 km"
+    val distance:String = "0.0 km",
+    val isFavorite:Boolean = false
 ) {
     fun listKey(): String = "${id}_${name.replace("\\s+".toRegex(), "")}"
 }

@@ -48,6 +48,8 @@ import com.nsa.people.profile.view.args.PeopleProfileArgs
 import com.nsa.people.view.PeopleScreen
 import com.nsa.peoplelist.view.PeopleListScreen
 import com.nsa.peoplelist.view.PeopleListViewModel
+import com.nsa.peoplelist.view.nearyou.NearYouListScreen
+import com.nsa.peoplelist.view.newmatches.NewMatchesListScreen
 import com.nsa.signin.EmailLoginScreen
 import com.nsa.signin.LoginLandingScreen
 import com.nsa.signin.LoginViewModel
@@ -202,15 +204,20 @@ fun NavGraphBuilder.findPeopleScreen(onNavigateToRoot: (Screen) -> Unit) {
 
         val viewModel: PeopleListViewModel = viewModel()
 
-        FindPeopleScreen(){
-            PeopleListScreen(
-                stateFlow = viewModel.uiState,
-                onNavigateToProfile = { profileId: Int ->
+        FindPeopleScreen(
+            {
+                NearYouListScreen(onNavigateToProfile = { profileId: Int ->
                     Screen.PeopleProfile.routeWith(profileId.toString())
                         .also(onNavigateToRoot)
-                }
-            )
-        }
+                })
+            },
+            {
+                NewMatchesListScreen(onNavigateToProfile = { profileId: Int ->
+                    Screen.PeopleProfile.routeWith(profileId.toString())
+                        .also(onNavigateToRoot)
+                })
+            },
+        )
     }
 }
 

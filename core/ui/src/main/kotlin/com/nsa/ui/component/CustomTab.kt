@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -77,7 +79,7 @@ private fun MyTabItem(
         } else {
             Black
         },
-        animationSpec = tween(easing = LinearEasing),
+        animationSpec = tween(easing = LinearEasing), label = "",
     )
     Text(
         modifier = Modifier
@@ -96,9 +98,10 @@ private fun MyTabItem(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CustomTab(
-    selectedItemIndex: Int,
+    pagerState: PagerState,
     items: List<TabData>,
     modifier: Modifier = Modifier,
     onClick: (index: Int) -> Unit,
@@ -119,7 +122,7 @@ fun CustomTab(
         with(LocalDensity.current){
             val tabWidth = size.width.toDp()/2
             val indicatorOffset: Dp by animateDpAsState(
-                targetValue = tabWidth * selectedItemIndex,
+                targetValue = tabWidth * pagerState.currentPage,
                 animationSpec = tween(easing = LinearEasing), label = "",
             )
             MyTabIndicator(
@@ -132,7 +135,7 @@ fun CustomTab(
                 modifier = Modifier.clip(CircleShape),
             ) {
                 items.mapIndexed { index, tabData ->
-                    val isSelected = index == selectedItemIndex
+                    val isSelected = index == pagerState.currentPage
                     MyTabItem(
                         isSelected = isSelected,
                         onClick = {
@@ -162,13 +165,5 @@ fun CustomTabSample() {
         mutableStateOf(0)
     }
 
-    AppTheme {
-        CustomTab(
-            modifier = Modifier.fillMaxWidth(),
-            items = listOf(TabData("Near You"), TabData("New Matches")),
-            selectedItemIndex = selected,
-            onClick = setSelected,
-        )
-    }
 
 }

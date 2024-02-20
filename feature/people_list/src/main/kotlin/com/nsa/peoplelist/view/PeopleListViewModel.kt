@@ -20,27 +20,38 @@ package com.nsa.peoplelist.view
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nsa.domain.model.fakePeopleProfileList
+import com.nsa.ui.vm.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import usecases.findpeopleusecases.FetchPeopleListKey
+import usecases.findpeopleusecases.FetchPeopleListUseCase
 
 
-class PeopleListViewModel : ViewModel() {
+class PeopleListViewModel : BaseViewModel<PeopleProfileUIState, PeopleListUiEvent>() {
 
-    private val _uiState: MutableStateFlow<PeopleProfileUIState> =
-        MutableStateFlow(PeopleProfileUIState.Empty)
-    val uiState: StateFlow<PeopleProfileUIState> = _uiState.asStateFlow()
+    val fetchPeopleListUseCase = FetchPeopleListUseCase()
 
-    init {
-        observePeopleList()
+    override fun initUIState(): PeopleProfileUIState {
+        return PeopleProfileUIState.Empty
+    }
+
+    override fun onUiEvent(event: PeopleListUiEvent) {
+        when(event){
+            PeopleListUiEvent.MakeFavorite -> TODO()
+            PeopleListUiEvent.SayHi -> TODO()
+        }
     }
 
 
 
-    private fun observePeopleList() {
+
+
+
+    fun observePeopleList(key:FetchPeopleListKey) {
         viewModelScope.launch {
 
             _uiState.update { PeopleProfileUIState.Loading }
@@ -51,7 +62,13 @@ class PeopleListViewModel : ViewModel() {
             //   _uiState.update { PeopleProfileUIState.Fail(Throwable("Test error")) }
 
             _uiState.update {
-                PeopleProfileUIState.Success(fakePeopleProfileList)
+                val data = fetchPeopleListUseCase.execute(key)
+                if(data.isSuccess){
+                    PeopleProfileUIState.Success(data.getOrDefault(listOf()))
+                }else{
+                    PeopleProfileUIState.Fail(Throwable())
+                }
+
             }
         }
     }
