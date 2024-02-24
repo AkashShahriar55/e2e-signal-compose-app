@@ -20,7 +20,6 @@ package com.nsa.navigation
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -28,10 +27,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.nsa.chat.ChatScreen
+import com.nsa.chat.ChatViewModel
+import com.nsa.chat.args.ChatArgs
 import com.nsa.chatlist.view.ChatListScreen
 import com.nsa.chatlist.view.ChatListViewModel
 import com.nsa.di.koinScope
+import com.nsa.favorites.FavoritePeopleScreen
 import com.nsa.find_people.FindPeopleScreen
+import com.nsa.find_people.FindPeopleViewModel
 import com.nsa.home.view.HomeScreen
 import com.nsa.home.view.HomeViewModel
 import com.nsa.navigation.ext.navigateTo
@@ -45,11 +49,11 @@ import com.nsa.onboarding.view.OnBoardingThirdScreen
 import com.nsa.people.profile.view.PeopleProfileScreen
 import com.nsa.people.profile.view.PeopleProfileViewModel
 import com.nsa.people.profile.view.args.PeopleProfileArgs
-import com.nsa.people.view.PeopleScreen
 import com.nsa.peoplelist.view.PeopleListScreen
 import com.nsa.peoplelist.view.PeopleListViewModel
-import com.nsa.peoplelist.view.nearyou.NearYouListScreen
-import com.nsa.peoplelist.view.newmatches.NewMatchesListScreen
+import com.nsa.people.view.nearyou.NearYouListScreen
+import com.nsa.people.view.newmatches.NewMatchesListScreen
+import com.nsa.peoplelist.view.PeopleListUiEvent
 import com.nsa.signin.EmailLoginScreen
 import com.nsa.signin.LoginLandingScreen
 import com.nsa.signin.LoginViewModel
@@ -58,11 +62,11 @@ import com.nsa.signup.RegistrationScreen
 import com.nsa.signup.RegistrationViewModel
 import com.nsa.signup.di.featureRegistrationModule
 import com.nsa.subscription.SubscriptionScreen
-import com.nsa.ui.component.SimpleTopBar
 import com.nsa.user.profile.di.featureUserProfileModule
 import com.nsa.user.profile.view.ProfileScreen
 import com.nsa.user.profile.view.vm.ProfileViewModel
 import org.koin.core.context.loadKoinModules
+import usecases.findpeopleusecases.FetchPeopleListKey
 
 
 fun NavGraphBuilder.homeNavGraph(onNavigateToRoot: (Screen) -> Unit) {
@@ -138,29 +142,29 @@ fun NavGraphBuilder.onBoardingNavGraph(onNavigateToRoot: (Screen) -> Unit) {
     }
 }
 
-fun NavGraphBuilder.peopleNavGraph(onNavigateToRoot: (Screen) -> Unit) {
+fun NavGraphBuilder.favoritePeopleNavGraph(onNavigateToRoot: (Screen) -> Unit) {
     composable(
         route = Screen.People.route
     ) {
 
         val viewModel: PeopleListViewModel = viewModel()
 
-        val simpleTopBar: @Composable () -> Unit = {
-            SimpleTopBar(
-                title = Screen.People.title ?: ""
-            )
+        viewModel.observePeopleList(FetchPeopleListKey.Favorite)
+
+        FavoritePeopleScreen(
+            viewModel.uiState,
+            {
+                viewModel.onUiEvent(PeopleListUiEvent.MakeFavorite(it))
+            },
+            {
+                viewModel.onUiEvent(PeopleListUiEvent.SayHi(it))
+            }
+        ) { profileId: Int ->
+            Screen.PeopleProfile.routeWith(profileId.toString())
+                .also(onNavigateToRoot)
         }
 
 
-        PeopleScreen(simpleTopBar){
-            PeopleListScreen(
-                viewModel.uiState,
-                onNavigateToProfile = { profileId: Int ->
-                    Screen.PeopleProfile.routeWith(profileId.toString())
-                        .also(onNavigateToRoot)
-                }
-            )
-        }
     }
 }
 
@@ -202,27 +206,27 @@ fun NavGraphBuilder.findPeopleScreen(onNavigateToRoot: (Screen) -> Unit) {
         route = Screen.FindPeople.route
     ) {
 
-        val viewModel: PeopleListViewModel = viewModel()
+        val findPeopleViewModel: FindPeopleViewModel = viewModel()
 
         FindPeopleScreen(
+            findPeopleViewModel,
             {
                 NearYouListScreen(onNavigateToProfile = { profileId: Int ->
                     Screen.PeopleProfile.routeWith(profileId.toString())
                         .also(onNavigateToRoot)
                 })
             },
-            {
-                NewMatchesListScreen(onNavigateToProfile = { profileId: Int ->
-                    Screen.PeopleProfile.routeWith(profileId.toString())
-                        .also(onNavigateToRoot)
-                })
-            },
-        )
+        ) {
+            NewMatchesListScreen(onNavigateToProfile = { profileId: Int ->
+                Screen.PeopleProfile.routeWith(profileId.toString())
+                    .also(onNavigateToRoot)
+            })
+        }
     }
 }
 
 
-fun NavGraphBuilder.chatListScreen() {
+fun NavGraphBuilder.chatListScreen(onNavigateToRoot: (Screen) -> Unit) {
     composable(
         route = Screen.ChatList.route
     ) {
@@ -231,8 +235,9 @@ fun NavGraphBuilder.chatListScreen() {
 
         ChatListScreen(
             state = viewModel.uiState,
-            onClick = {
-                //TODO: open chat screen
+            onClick = {conversationId ->
+                Screen.Chat.routeWith(conversationId.toString())
+                    .also(onNavigateToRoot)
             }
         )
     }
@@ -250,6 +255,12 @@ fun NavGraphBuilder.peopleListScreen(onNavigateTo: (Screen) -> Unit) {
             onNavigateToProfile = { profileId: Int ->
                 Screen.PeopleProfile.routeWith(profileId.toString())
                     .also(onNavigateTo)
+            },
+            makeFavorite={
+                viewModel.onUiEvent(PeopleListUiEvent.MakeFavorite(it))
+            },
+            sayHi = {
+                viewModel.onUiEvent(PeopleListUiEvent.SayHi(it))
             }
         )
     }
@@ -267,15 +278,12 @@ fun NavGraphBuilder.peopleProfileScreen(
     ) {
 
         val viewModel: PeopleProfileViewModel = viewModel()
-        val peopleProfile = remember { viewModel.getProfile() }
 
-        peopleProfile ?: return@composable
 
         PeopleProfileScreen(
-            peopleProfile,
-            onBackPressed = onNavigateBack,
-            onOpenChatWith = {}
-        )
+            viewModel.uiState,
+            onBackPressed = onNavigateBack
+        ) {}
     }
 }
 
@@ -367,6 +375,27 @@ fun NavGraphBuilder.signUpScreen(onNavigateBack: () -> Unit, onNavigateToRoot: (
                 Screen.Home.withClearBackStack()
                 .also(onNavigateToRoot)
             }
+        )
+    }
+}
+
+fun NavGraphBuilder.chatScreen(
+    onNavigateBack: () -> Unit,
+    onNavigateTo: (Screen) -> Unit
+) {
+    composable(
+        route = Screen.Chat.route,
+        arguments = listOf(
+            navArgument(ChatArgs.CONVERSATION_ID_ARG) { type = NavType.IntType }
+        )
+    ) {
+
+        val viewModel: ChatViewModel = viewModel()
+
+
+        ChatScreen(
+            viewModel.uiState,
+            viewModel.userProfileState
         )
     }
 }

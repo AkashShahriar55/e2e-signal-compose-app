@@ -20,9 +20,14 @@ package com.nsa.people.profile.view
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nsa.domain.model.PeopleProfile
 import com.nsa.domain.model.fakePeopleProfileList
 import com.nsa.people.profile.view.args.PeopleProfileArgs
+import com.nsa.ui.vm.BaseViewModel
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import usecases.findpeopleusecases.FetchPeopleProfileUseCase
 
 /**
  * Profile screen for selected person from People list
@@ -32,15 +37,45 @@ import com.nsa.people.profile.view.args.PeopleProfileArgs
  */
 class PeopleProfileViewModel(
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : BaseViewModel<PeopleProfileUIState, PeopleProfileUiEvent>() {
 
     private val profileId : Int =  PeopleProfileArgs(savedStateHandle).peopleProfileId
+
+    val fetchPeopleProfileUseCase = FetchPeopleProfileUseCase()
 
 
 
     init {
         Log.d("navigation", "PeopleProfileViewModel: args = $profileId")
+        getProfile()
     }
 
-    fun getProfile() : PeopleProfile? = fakePeopleProfileList.find { it.id == profileId }
+    private fun getProfile() {
+        viewModelScope.launch {
+            _uiState.update {
+                PeopleProfileUIState.Loading
+            }
+            val data = fetchPeopleProfileUseCase.execute(profileId)
+            data.onSuccess {profile ->
+                _uiState.update {
+                    PeopleProfileUIState.Success(profile)
+                }
+            }
+            data.onFailure {throwable ->
+                _uiState.update {
+                    PeopleProfileUIState.Fail(throwable)
+                }
+
+            }
+        }
+    }
+    override fun initUIState(): PeopleProfileUIState {
+        return PeopleProfileUIState.Empty
+    }
+
+    override fun onUiEvent(event: PeopleProfileUiEvent) {
+
+    }
+
+
 }

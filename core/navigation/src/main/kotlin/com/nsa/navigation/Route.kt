@@ -22,6 +22,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.nsa.chat.args.ChatArgs
 import com.nsa.people.profile.view.args.PeopleProfileArgs
 
 const val navigationRouteOnBoarding = "on_boarding"
@@ -45,6 +46,9 @@ const val navigationRouteAuth = "authentication"
 const val navigationRouteSignIn = "sign_in"
 const val navigationRouteSignInWithEmail = "sign_in_with_email"
 const val navigationRouteSignUp = "sign_up"
+
+const val navigationRouteChat =
+    "chat/{${ChatArgs.CONVERSATION_ID_ARG}}"
 
 sealed class Screen(
     val route: String,
@@ -98,5 +102,7 @@ sealed class Screen(
 
     object PeopleList : Screen(navigationRoutePeopleList)
     object PeopleProfile : Screen(navigationRoutePeopleProfile)
+
+    object Chat : Screen(navigationRouteChat)
 
 }

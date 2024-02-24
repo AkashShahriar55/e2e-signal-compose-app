@@ -9,12 +9,12 @@ val md_theme_light_primaryContainer = Color(0xFFFFD9DD)
 val md_theme_light_onPrimaryContainer = Color(0xFF400012)
 val md_theme_light_secondary = Color(0xFFBC0051)
 val md_theme_light_onSecondary = Color(0xFFFFFFFF)
-val md_theme_light_secondaryContainer = Color(0xFFFFD9DF)
+val md_theme_light_secondaryContainer = Color(0xFFFFFFFF)
 val md_theme_light_onSecondaryContainer = Color(0xFF3F0016)
 val md_theme_light_tertiary = Color(0xFF9C404B)
 val md_theme_light_onTertiary = Color(0xFFFFFFFF)
-val md_theme_light_tertiaryContainer = Color(0xFFFFDADB)
-val md_theme_light_onTertiaryContainer = Color(0xFF40000E)
+val md_theme_light_tertiaryContainer = Color(0xFFFF0460)
+val md_theme_light_onTertiaryContainer = Color(0xFFFFFFFF)
 val md_theme_light_error = Color(0xFFBA1A1A)
 val md_theme_light_errorContainer = Color(0xFFFFDAD6)
 val md_theme_light_onError = Color(0xFFFFFFFF)
@@ -75,6 +75,8 @@ val white_button_content_color = Color(0xff000E08)
 // Find people screen color
 val favorite_button_container_color = Color(0xffFFEDED)
 val favorite_button_content_color = Color(0xffFF3578)
+val favorite_button_selected_container_color = Color(0xffFF3578)
+val favorite_button_selected_content_color = Color(0xffffffff)
 val favorite_button_container_enabled_color = Color(0xffFF0360)
 
 val wave_button_container_color = Color(0xffFAFAFA)
@@ -96,3 +98,8 @@ val ColorScheme.red: Color
 @get:Composable
 val ColorScheme.darkBackground: Color
     get() = seed
+
+
+@get:Composable
+val ColorScheme.shimmerColor: Color
+    get() = Color(0xff9E9FA6)

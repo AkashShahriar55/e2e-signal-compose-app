@@ -22,17 +22,21 @@ import com.nsa.ui.theme.AppTheme
 fun Chips(
     text:String,
     modifier: Modifier = Modifier,
-    containerColor:Color = Color(0xffFFEDED),
-    contentColor:Color = Color(0xffFF3578)
+    containerColor:Color = Color.Unspecified,
+    contentColor:Color = Color.Unspecified
 ){
+
+    val container = if(containerColor == Color.Unspecified) Color(0xffFFEDED) else containerColor
+    val content = if(contentColor == Color.Unspecified) Color(0xffFF3578) else contentColor
+
     Box(
-        modifier = modifier.height(35.dp).background(containerColor,RoundedCornerShape(50)),
+        modifier = modifier.height(35.dp).background(container,RoundedCornerShape(50)),
         contentAlignment = Alignment.Center
     ) {
         Text(
             modifier = Modifier.padding(20.dp,0.dp),
             text = text,
-            color = contentColor
+            color = content
         )
     }
 }

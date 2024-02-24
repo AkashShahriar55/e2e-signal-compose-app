@@ -54,7 +54,13 @@ import com.nsa.ui.theme.AppTheme
  *
  */
 @Composable
-internal fun ProfileCard(modifier: Modifier = Modifier, item: PeopleProfile, onClick: () -> Unit) {
+internal fun ProfileCard(
+    modifier: Modifier = Modifier,
+    item: PeopleProfile,
+    onClick: () -> Unit,
+    makeFavorite: () -> Unit,
+    sayHi: () -> Unit
+) {
     CardItem(
         modifier = modifier
     ) {
@@ -76,11 +82,11 @@ internal fun ProfileCard(modifier: Modifier = Modifier, item: PeopleProfile, onC
                 contentScale = ContentScale.Crop
             )
             ProfileContent(
-                userName = item.name,
-                subName = null,
-                isOnline = item.status,
+                profile = item,
                 alignment = Alignment.Start,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
+                makeFavorite,
+                sayHi
             )
         }
     }
@@ -103,7 +109,9 @@ fun PreviewProfileCard() {
                 "New York,USA"
 
             ),
-            onClick = {}
+            onClick = {},
+            {},
+            {}
         )
     }
 

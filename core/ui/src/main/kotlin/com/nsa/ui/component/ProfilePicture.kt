@@ -46,7 +46,7 @@ import com.nsa.ui.theme.red
  */
 
 @Composable
-fun ProfilePicture(photoUri: Uri, onlineStatus: Boolean, size : ProfilePictureSize, modifier: Modifier = Modifier) {
+fun ProfilePicture(photoUri: Uri?, onlineStatus: Boolean, size : ProfilePictureSize, modifier: Modifier = Modifier) {
     val pictureSizeDp = when(size) {
         ProfilePictureSize.SMALL -> 36.dp
         ProfilePictureSize.MEDIUM -> 60.dp

@@ -24,31 +24,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -59,12 +44,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -74,46 +56,38 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.boundsInParent
-import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.fastForEachIndexed
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
-import coil.transform.CircleCropTransformation
-import com.guru.fontawesomecomposelib.FaIcon
-import com.guru.fontawesomecomposelib.FaIcons
 
 import com.nsa.domain.model.PeopleProfile
 import com.nsa.domain.model.fakePeopleProfileList
-import com.nsa.people.profile.R
 import com.nsa.ui.component.Chips
 import com.nsa.ui.component.GallaryImage
 
-import com.nsa.ui.component.ProfileContent
 import com.nsa.ui.component.ProfilePicture
 import com.nsa.ui.component.ProfilePictureSize
 import com.nsa.ui.component.RoundedBackButton
 import com.nsa.ui.component.ScreenBackground
 import com.nsa.ui.theme.AppTheme
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlin.math.ceil
+import com.nsa.ui.theme.shimmerColor
+import com.valentinilk.shimmer.shimmer
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 
 /**
@@ -126,14 +100,41 @@ import kotlin.math.ceil
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PeopleProfileScreen(
-    profile: PeopleProfile,
+    stateFlow: StateFlow<PeopleProfileUIState>,
     onBackPressed: () -> Unit,
     onOpenChatWith: (profile: PeopleProfile) -> Unit
 ) {
 
 
-    val backgroundBoxTopOffset = remember { mutableIntStateOf(0) }
 
+
+    val uiState by stateFlow.collectAsStateWithLifecycle()
+
+
+
+    when(uiState){
+        PeopleProfileUIState.Empty -> TODO()
+        is PeopleProfileUIState.Fail -> TODO()
+        PeopleProfileUIState.Loading -> ProfileView(fakePeopleProfileList[0],onBackPressed,true)
+        is PeopleProfileUIState.Success -> (uiState as PeopleProfileUIState.Success).profile?.let { ProfileView(it,onBackPressed) }
+    }
+
+
+}
+
+
+
+
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun ProfileView(
+    profile:PeopleProfile?,
+    onBackPressed: () -> Unit,
+    isShimmer:Boolean = false
+){
+
+    val backgroundBoxTopOffset = remember { mutableIntStateOf(0) }
 
     Scaffold(
         floatingActionButton = { FloatingButton()},
@@ -146,12 +147,21 @@ fun PeopleProfileScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            Box(modifier = Modifier.fillMaxWidth()){
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if(isShimmer)
+                            Modifier.shimmer()
+                        else
+                            Modifier
+                    )
+            ){
                 with(LocalDensity.current){
                     Image(
                         painter = rememberAsyncImagePainter(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(profile.photo)
+                                .data(if(isShimmer) Uri.EMPTY else profile?.photo)
                                 .size(Size.ORIGINAL) // Set the target size to load the image at.
                                 .build()
                         ),
@@ -184,18 +194,35 @@ fun PeopleProfileScreen(
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Chips(
-                        text = "12.3 km away",
+                        modifier = Modifier
+                            .then(
+                                if(isShimmer)
+                                    Modifier.shimmer()
+                                else
+                                    Modifier
+                            ),
+                        text = "${profile?.distance} away",
                         containerColor = Color(0xB3252527),
-                        contentColor = Color.White
+                        contentColor = if(isShimmer){
+                            Color.Transparent
+                        }else{
+                            Color.White
+                             },
                     )
                 }
 
                 ProfilePicture(
-                    photoUri = profile.photo ?: Uri.EMPTY,
-                    onlineStatus = profile.status,
+                    photoUri = if(isShimmer) Uri.EMPTY else profile?.photo,
+                    onlineStatus = profile?.status ?: false,
                     size = ProfilePictureSize.LARGE,
                     modifier = Modifier
                         .padding(10.dp, 50.dp, 10.dp, 10.dp)
+                        .then(
+                            if(isShimmer)
+                                Modifier.shimmer()
+                            else
+                                Modifier
+                        )
                         .align(Alignment.CenterHorizontally)
                         .onGloballyPositioned {
                             val rect = it.boundsInParent()
@@ -206,64 +233,137 @@ fun PeopleProfileScreen(
                 )
 
                 Text(
-                    text = profile.name,
+                    modifier = Modifier
+                        .then(
+                            if(isShimmer)
+                                Modifier
+                                    .shimmer()
+                                    .background(
+                                        MaterialTheme.colorScheme.shimmerColor,
+                                        RoundedCornerShape(5.dp)
+                                    )
+                            else
+                                Modifier
+                        ),
+                    text = profile?.name.toString(),
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
+                    color = if(isShimmer) Color.Transparent else Color.Unspecified
                 )
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 10.dp),
-                    text = "About",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
+                profile?.about?.takeIf { it.isNotBlank() }?.let {
+                    Text(
+                        modifier = Modifier
+                            .padding(0.dp, 10.dp)
+                            .align(Alignment.Start)
+                            .then(
+                                if(isShimmer)
+                                    Modifier
+                                        .shimmer()
+                                        .background(
+                                            MaterialTheme.colorScheme.shimmerColor,
+                                            RoundedCornerShape(5.dp)
+                                        )
+                                else
+                                    Modifier
+                            ),
+                        text = "About",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = if(isShimmer) Color.Transparent else Color.Unspecified
+                    )
 
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = profile.about,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xff8A91A8)
-                )
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .then(
+                                if(isShimmer)
+                                    Modifier
+                                        .shimmer()
+                                        .background(
+                                            MaterialTheme.colorScheme.shimmerColor,
+                                            RoundedCornerShape(5.dp)
+                                        )
+                                else
+                                    Modifier
+                            ),
+                        text = it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if(isShimmer) Color.Transparent else Color.Unspecified
+                    )
+                }
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 10.dp),
-                    text = "Interest",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
 
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    profile.interest.forEach {
-                        Chips(
-                            text = it
-                        )
+
+
+                profile?.interest?.takeIf { it.isNotEmpty() }?.let {
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(0.dp, 10.dp)
+                            .then(
+                                if(isShimmer)
+                                    Modifier
+                                        .shimmer()
+                                        .background(
+                                            MaterialTheme.colorScheme.shimmerColor,
+                                            RoundedCornerShape(5.dp)
+                                        )
+                                else
+                                    Modifier
+                            ),
+                        text = "Interest",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = if(isShimmer) Color.Transparent else Color.Unspecified
+                    )
+
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        it.forEach {
+                            Chips(
+                                text = it,
+                                modifier = Modifier
+                                    .then(
+                                        if(isShimmer)
+                                            Modifier
+                                                .shimmer()
+                                        else
+                                            Modifier
+                                    ),
+                                containerColor = if(isShimmer) MaterialTheme.colorScheme.shimmerColor else Color.Unspecified,
+                                contentColor = if(isShimmer) Color.Transparent else Color.Unspecified
+                            )
+                        }
                     }
                 }
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 10.dp),
-                    text = "Gallery",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
 
+                profile?.gallary?.takeIf { it.isNotEmpty() }?.let{
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(0.dp, 10.dp)
+                            .then(
+                                if(isShimmer)
+                                    Modifier
+                                        .shimmer()
+                                        .background(
+                                            MaterialTheme.colorScheme.shimmerColor,
+                                            RoundedCornerShape(5.dp)
+                                        )
+                                else
+                                    Modifier
+                            ),
+                        text = "Gallery",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = if(isShimmer) Color.Transparent else Color.Unspecified
+                    )
 
+                    GallaryPreview(images = it,isShimmer)
 
-                GallaryPreview(images = profile.gallary)
+                }
+
 
 
 
@@ -274,12 +374,9 @@ fun PeopleProfileScreen(
 
 
     }
-
-
-
-
-
 }
+
+
 
 
 
@@ -344,16 +441,28 @@ fun FloatingButton(){
 
 
 
+
+
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun GallaryPreview(images:List<Uri>){
+fun GallaryPreview(images:List<Uri>,isShimmer:Boolean = false){
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
         images.getOrNull(0)?.apply {
             GallaryImage(
-                modifier = Modifier.weight(2f),
-                image = this
+                modifier = Modifier
+                    .weight(2f)
+                    .then(
+                        if(isShimmer)
+                            Modifier
+                                .shimmer()
+                        else
+                            Modifier
+                    )
+                ,
+                image = if(isShimmer) Uri.EMPTY else this
             )
         }
         Column(
@@ -362,41 +471,62 @@ fun GallaryPreview(images:List<Uri>){
 
             images.getOrNull(1)?.apply {
                 GallaryImage(
-                    modifier = Modifier.fillMaxWidth(),
-                    image = this
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if(isShimmer)
+                                Modifier
+                                    .shimmer()
+                            else
+                                Modifier
+                        )
+                    ,
+                    image = if(isShimmer) Uri.EMPTY else this
                 )
             }
             images.getOrNull(2)?.apply {
                 GallaryImage(
-                    modifier = Modifier.fillMaxWidth(),
-                    image = this
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if(isShimmer)
+                                Modifier
+                                    .shimmer()
+                            else
+                                Modifier
+                        ),
+                    image = if(isShimmer) Uri.EMPTY else this
                 )
             }
         }
     }
 
 
+    if(!isShimmer){
+        var size by remember { mutableStateOf(IntSize.Zero) }
 
-    var size by remember { mutableStateOf(IntSize.Zero) }
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .onSizeChanged {
+                    size = it
+                }
+        ) {
+            images.takeIf { it.size > 3 }?.drop(3)?.forEach { uri ->
+                with(LocalDensity.current){
+                    GallaryImage(
+                        modifier = Modifier.width((size.width/3f).toDp()),
+                        image = uri
+                    )
+                }
+            }
 
-    FlowRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .onSizeChanged {
-                size = it
-            }
-    ) {
-        images.takeIf { it.size > 3 }?.drop(3)?.forEach { uri ->
-            with(LocalDensity.current){
-                GallaryImage(
-                    modifier = Modifier.width((size.width/3f).toDp()),
-                    image = uri
-                )
-            }
+
         }
-
-
     }
+
+
+
 }
 
 
@@ -406,10 +536,23 @@ fun PeopleProfilePreview() {
     AppTheme(darkTheme = false) {
         fakePeopleProfileList.find { it.id == 2 }?.let {
             PeopleProfileScreen(
-                it,
-                onBackPressed = {},
-                onOpenChatWith = {}
-            )
+                MutableStateFlow(PeopleProfileUIState.Success(it)).asStateFlow(),
+                onBackPressed = {}
+            ) {}
+        }
+    }
+}
+
+
+@Preview()
+@Composable
+fun PeopleProfileShimmerPreview() {
+    AppTheme(darkTheme = false) {
+        fakePeopleProfileList.find { it.id == 2 }?.let {
+            PeopleProfileScreen(
+                MutableStateFlow(PeopleProfileUIState.Loading).asStateFlow(),
+                onBackPressed = {}
+            ) {}
         }
     }
 }

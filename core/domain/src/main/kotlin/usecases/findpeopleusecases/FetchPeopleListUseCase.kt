@@ -5,6 +5,7 @@ import com.nsa.coroutines.BaseCoroutinesUseCase
 import com.nsa.domain.model.PeopleProfile
 import com.nsa.domain.model.fakePeopleProfileList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 
 sealed class FetchPeopleListKey private constructor(val key:String){
@@ -24,6 +25,7 @@ class FetchPeopleListUseCase: BaseCoroutinesUseCase<List<PeopleProfile>, FetchPe
     Dispatchers.IO
 ) {
     override suspend fun buildUseCase(params: FetchPeopleListKey?): List<PeopleProfile> {
+        delay(2000)
         return when(params){
             FetchPeopleListKey.Favorite -> fakePeopleProfileList.filter { it.isFavorite }
             FetchPeopleListKey.NearYou -> fakePeopleProfileList.take(5)

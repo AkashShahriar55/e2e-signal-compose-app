@@ -19,7 +19,7 @@ package com.nsa.peoplelist
 
 import app.cash.turbine.test
 import com.nsa.peoplelist.view.PeopleListViewModel
-import com.nsa.peoplelist.view.PeopleProfileUIState
+import com.nsa.peoplelist.view.PeopleListUIState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -47,7 +47,7 @@ class PeopleListViewModelTest {
         vm = PeopleListViewModel()
         assertTrue(
             "Initial state is incorrect: ${vm.uiState.value}",
-            vm.uiState.value == PeopleProfileUIState.Empty
+            vm.uiState.value == PeopleListUIState.Empty
         )
     }
 
@@ -55,11 +55,11 @@ class PeopleListViewModelTest {
     fun stateTest() = runTest {
 
         vm.uiState.test {
-            assertEquals("State is not Loading", PeopleProfileUIState.Loading, awaitItem())
+            assertEquals("State is not Loading", PeopleListUIState.Loading, awaitItem())
 
             assertTrue(
                 "People list is empty",
-                (awaitItem() as PeopleProfileUIState.Success).profileList.isNotEmpty()
+                (awaitItem() as PeopleListUIState.Success).profileList.isNotEmpty()
             )
         }
     }

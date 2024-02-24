@@ -18,6 +18,8 @@
 package com.nsa.chatlist.view
 
 import com.nsa.domain.model.ChatList
+import com.nsa.domain.model.ChatListData
+import com.nsa.ui.state.UIState
 
 /**
  * UI state for [com.nsa.chatlist.view.ChatListScreen]
@@ -25,13 +27,13 @@ import com.nsa.domain.model.ChatList
  * Created on Feb 04, 2023.
  *
  */
-sealed interface ChatListUIState {
+sealed interface ChatListUIState:UIState {
 
     object Empty : ChatListUIState
 
     object Loading : ChatListUIState
 
-    class Success(val profileList : List<ChatList>) : ChatListUIState
+    class Success(val chatList : ChatListData) : ChatListUIState
 
-    class Fail(val throwable: Throwable) : ChatListUIState
+    class Fail(val throwable: Throwable?) : ChatListUIState
 }

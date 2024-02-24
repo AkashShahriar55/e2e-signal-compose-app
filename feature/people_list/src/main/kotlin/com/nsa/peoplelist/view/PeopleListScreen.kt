@@ -18,18 +18,13 @@
 package com.nsa.peoplelist.view
 
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,18 +32,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nsa.domain.model.PeopleProfile
 import com.nsa.domain.model.fakePeopleProfileList
 import com.nsa.peoplelist.view.component.ProfileCard
 import com.nsa.ui.component.ScreenBackground
-import com.nsa.ui.ext.dp
-import com.nsa.ui.ext.statusBarHeight
 import com.nsa.ui.theme.AppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,8 +54,10 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun PeopleListScreen(
-    stateFlow: StateFlow<PeopleProfileUIState>,
-    onNavigateToProfile: (profileId: Int) -> Unit
+    stateFlow: StateFlow<PeopleListUIState>,
+    onNavigateToProfile: (profileId: Int) -> Unit,
+    makeFavorite: (profileId: Int) -> Unit,
+    sayHi: (profileId: Int) -> Unit
 ) {
 
     val uiState by stateFlow.collectAsStateWithLifecycle()
@@ -76,20 +69,22 @@ fun PeopleListScreen(
     ) {
 
         when (uiState) {
-            is PeopleProfileUIState.Loading -> Loading()
-            is PeopleProfileUIState.Empty -> NoPeopleFound()
-            is PeopleProfileUIState.Success ->
+            is PeopleListUIState.Loading -> Loading()
+            is PeopleListUIState.Empty -> NoPeopleFound()
+            is PeopleListUIState.Success ->
                 PeopleList(
-                    list = (uiState as PeopleProfileUIState.Success).profileList,
-                    onProfileClick = onNavigateToProfile
+                    list = (uiState as PeopleListUIState.Success).profileList,
+                    onProfileClick = onNavigateToProfile,
+                    makeFavorite,
+                    sayHi
                 )
 
-            is PeopleProfileUIState.Fail -> {
+            is PeopleListUIState.Fail -> {
                 NoPeopleFound()
                 LaunchedEffect(Unit) {
                     Toast.makeText(
                         context,
-                        (uiState as PeopleProfileUIState.Fail).throwable.localizedMessage,
+                        (uiState as PeopleListUIState.Fail).throwable?.localizedMessage,
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -136,7 +131,9 @@ private fun Loading() {
 @Composable
 private fun PeopleList(
     list: List<PeopleProfile>,
-    onProfileClick: (profileId: Int) -> Unit
+    onProfileClick: (profileId: Int) -> Unit,
+    makeFavorite: (profileId: Int) -> Unit,
+    sayHi: (profileId: Int) -> Unit
 ) {
 
 
@@ -148,9 +145,12 @@ private fun PeopleList(
             key = { _, item -> item.listKey() }
         ) { index, profile ->
             ProfileCard(
-
+                modifier = Modifier.fillMaxHeight(),
                 item = profile,
-                onClick = { onProfileClick(profile.id) })
+                onClick = { onProfileClick(profile.id) },
+                { makeFavorite(profile.id) },
+                { sayHi(profile.id) }
+            )
         }
     }
 }
@@ -161,8 +161,10 @@ private fun PeopleList(
 fun PeopleListPreview() {
     AppTheme {
         PeopleListScreen(
-            stateFlow = MutableStateFlow(PeopleProfileUIState.Success(fakePeopleProfileList)),
-            onNavigateToProfile = { }
+            stateFlow = MutableStateFlow(PeopleListUIState.Success(fakePeopleProfileList)),
+            onNavigateToProfile = { },
+            {},
+            {}
         )
     }
 }

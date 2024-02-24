@@ -47,7 +47,7 @@ data class PeopleProfile(
 }
 
 
-val fakePeopleProfileList = arrayListOf(
+var fakePeopleProfileList = listOf(
     PeopleProfile(
         id = 11,
         name = "Lily James",
@@ -75,7 +75,8 @@ val fakePeopleProfileList = arrayListOf(
         status = true,
         Uri.parse("https://images.unsplash.com/photo-1485290334039-a3c69043e517?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"),
         21,
-        "Spain"
+        "Spain",
+        isFavorite = true,
     ),
     PeopleProfile(
         id = 1,
@@ -91,7 +92,9 @@ val fakePeopleProfileList = arrayListOf(
         status = true,
         Uri.parse("https://images.unsplash.com/photo-1543123820-ac4a5f77da38?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NDh8fHBvcnRyYWl0fGVufDB8MnwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),
         24,
-        "Italy"
+        "Italy",
+        isFavorite = true,
+
     ),
     PeopleProfile(
         id = 3,
@@ -107,7 +110,8 @@ val fakePeopleProfileList = arrayListOf(
         status = false,
         Uri.parse("https://images.unsplash.com/photo-1597528380214-aa94bde3fc32?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NTZ8fHBvcnRyYWl0fGVufDB8MnwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),
         23,
-        "India"
+        "India",
+        isFavorite = true,
     ),
     PeopleProfile(
         id = 5,
@@ -115,7 +119,8 @@ val fakePeopleProfileList = arrayListOf(
         status = false,
         Uri.parse("https://images.unsplash.com/photo-1598641795816-a84ac9eac40c?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NjJ8fHBvcnRyYWl0fGVufDB8MnwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),
         31,
-        "Rome"
+        "Rome",
+        isFavorite = true,
     ),
     PeopleProfile(
         id = 6,
@@ -123,7 +128,8 @@ val fakePeopleProfileList = arrayListOf(
         status = true,
         Uri.parse("https://images.unsplash.com/photo-1566895733044-d2bdda8b6234?ixid=MXwxMjA3fDB8MHxzZWFyY2h8ODh8fHBvcnRyYWl0fGVufDB8MnwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),
         18,
-        "Spain"
+        "Spain",
+        isFavorite = true,
     ),
     PeopleProfile(
         id = 7,
@@ -138,7 +144,8 @@ val fakePeopleProfileList = arrayListOf(
         name = "Georgia S.", status = false,
         Uri.parse("https://images.unsplash.com/photo-1547212371-eb5e6a4b590c?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTA3fHxwb3J0cmFpdHxlbnwwfDJ8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),
         22,
-        "Russia"
+        "Russia",
+        isFavorite = true,
     ),
     PeopleProfile(
         id = 12,
@@ -146,7 +153,8 @@ val fakePeopleProfileList = arrayListOf(
         status = false,
         Uri.parse("https://images.unsplash.com/photo-1578176603894-57973e38890f?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTE0fHxwb3J0cmFpdHxlbnwwfDJ8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),
         25,
-        "Ukraine"
+        "Ukraine",
+        isFavorite = true,
     ),
     PeopleProfile(
         id = 9,

@@ -17,46 +17,69 @@
  */
 package com.nsa.peoplelist.view
 
-import androidx.lifecycle.ViewModel
+import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.nsa.domain.model.fakePeopleProfileList
 import com.nsa.ui.vm.BaseViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import usecases.findpeopleusecases.FetchPeopleListKey
 import usecases.findpeopleusecases.FetchPeopleListUseCase
+import usecases.findpeopleusecases.MakeFavoriteUseCase
 
 
-class PeopleListViewModel : BaseViewModel<PeopleProfileUIState, PeopleListUiEvent>() {
+class PeopleListViewModel : BaseViewModel<PeopleListUIState, PeopleListUiEvent>() {
 
-    val fetchPeopleListUseCase = FetchPeopleListUseCase()
+    private val fetchPeopleListUseCase = FetchPeopleListUseCase()
+    private val makeFavoriteUseCase = MakeFavoriteUseCase()
 
-    override fun initUIState(): PeopleProfileUIState {
-        return PeopleProfileUIState.Empty
+    override fun initUIState(): PeopleListUIState {
+        return PeopleListUIState.Empty
     }
 
     override fun onUiEvent(event: PeopleListUiEvent) {
         when(event){
-            PeopleListUiEvent.MakeFavorite -> TODO()
-            PeopleListUiEvent.SayHi -> TODO()
+            is PeopleListUiEvent.MakeFavorite -> makeFavorite(event.id)
+            is PeopleListUiEvent.SayHi -> TODO()
         }
     }
 
+    private fun makeFavorite(id: Int) {
+        viewModelScope.launch{
+            val data = makeFavoriteUseCase.execute(id)
+            Log.d("check_date", "makeFavorite: ${data.getOrNull()} ${data.exceptionOrNull()}")
+            data.onSuccess {
+                _uiState.update {
+                    PeopleListUIState.Success(
+                            it
+                            .profileList
+                            .toMutableList()
+                            .map { profile->
+                                if(profile.id == id){
+                                    profile
+                                        .copy(
+                                            isFavorite = data.getOrDefault(false)
+                                        )
+                                }
+                                else{
+                                    profile
+                                }
+                            }
+                    )
+                }
+            }
 
+            data.onFailure {
 
+            }
 
+        }
+    }
 
 
     fun observePeopleList(key:FetchPeopleListKey) {
         viewModelScope.launch {
 
-            _uiState.update { PeopleProfileUIState.Loading }
-
-             delay(2000)
+            _uiState.update { PeopleListUIState.Loading }
 
             // _uiState.update { PeopleProfileUIState.Empty }
             //   _uiState.update { PeopleProfileUIState.Fail(Throwable("Test error")) }
@@ -64,9 +87,9 @@ class PeopleListViewModel : BaseViewModel<PeopleProfileUIState, PeopleListUiEven
             _uiState.update {
                 val data = fetchPeopleListUseCase.execute(key)
                 if(data.isSuccess){
-                    PeopleProfileUIState.Success(data.getOrDefault(listOf()))
+                    PeopleListUIState.Success(data.getOrDefault(listOf()))
                 }else{
-                    PeopleProfileUIState.Fail(Throwable())
+                    PeopleListUIState.Fail(data.exceptionOrNull())
                 }
 
             }

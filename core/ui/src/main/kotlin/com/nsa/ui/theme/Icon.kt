@@ -104,12 +104,11 @@ fun LocatonIcon(modifier: Modifier = Modifier,color: Color = Color(0xff8A91A8)) 
 }
 
 @Composable
-fun HeartIcon(modifier: Modifier = Modifier,color: Color = Color(0xffFF3578)) {
+fun HeartIcon(modifier: Modifier = Modifier) {
     Icon(
         modifier = modifier,
         painter = painterResource(id = R.drawable.heart), // Replace "your_vector_asset" with the actual name of your vector asset resource
         contentDescription = "location Icon", // Provide a description for accessibility,
-        tint = color
     )
 }
 

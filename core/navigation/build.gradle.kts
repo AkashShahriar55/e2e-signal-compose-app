@@ -8,6 +8,7 @@ dependencies {
     //Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(project(":feature:chat"))
     debugImplementation(libs.bundles.compose.debug)
 
     api(libs.navigation)
@@ -25,4 +26,5 @@ dependencies {
     implementation(projects.feature.signin)
     implementation(projects.feature.signup)
     implementation(projects.feature.findPeople)
+    implementation(projects.feature.favorites)
 }

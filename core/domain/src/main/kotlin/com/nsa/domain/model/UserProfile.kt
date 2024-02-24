@@ -30,7 +30,8 @@ data class UserProfile(
     val name : String,
     val nickname: String,
     val status: Boolean = false,
-    val photo : Uri = Uri.EMPTY
+    val photo : Uri = Uri.EMPTY,
+    val location:String
 )
 
 
@@ -39,4 +40,5 @@ val fakeUserProfile = UserProfile(
     nickname = "Pranav",
     status = true,
     photo =   Uri.parse("https://images.unsplash.com/photo-1595152772835-219674b2a8a6?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NDd8fHBvcnRyYWl0fGVufDB8MnwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"),
+    location = "Bali,Indonesia"
 )

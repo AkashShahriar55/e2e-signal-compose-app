@@ -20,17 +20,29 @@ package com.nsa.chatlist.view
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nsa.domain.model.fakeChatList
+import com.nsa.ui.vm.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import usecases.messagesUseCases.FetchChatListUseCase
 
 
-class ChatListViewModel : ViewModel() {
-    private val _uiState: MutableStateFlow<ChatListUIState> =
-        MutableStateFlow(ChatListUIState.Empty)
-    val uiState: StateFlow<ChatListUIState> = _uiState.asStateFlow()
+class ChatListViewModel : BaseViewModel<ChatListUIState, ChatListUiEvent>() {
+
+    val fetchChatListUseCase = FetchChatListUseCase()
+
+    override fun initUIState(): ChatListUIState {
+        return ChatListUIState.Empty
+    }
+
+    override fun onUiEvent(event: ChatListUiEvent) {
+        when(event){
+            is ChatListUiEvent.ShowConversation -> TODO()
+            is ChatListUiEvent.ShowStory -> TODO()
+        }
+    }
 
     init {
         observeChatList()
@@ -41,16 +53,23 @@ class ChatListViewModel : ViewModel() {
 
             _uiState.update { ChatListUIState.Loading }
 
-           // delay(1000)
+            val data = fetchChatListUseCase.execute()
 
-            /*
-           _uiState.update { PeopleProfileUIState.Empty }
-            _uiState.update { PeopleProfileUIState.Fail(Throwable("Test error")) }
-
-             */
-            _uiState.update {
-                ChatListUIState.Success(fakeChatList)
+            data.onSuccess{chatList->
+                _uiState.update {
+                    ChatListUIState.Success(chatList)
+                }
             }
+
+            data.onFailure{throwable ->
+                _uiState.update {
+                    ChatListUIState.Fail(throwable)
+                }
+            }
+
+
         }
     }
+
+
 }

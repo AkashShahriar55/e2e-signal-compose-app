@@ -44,12 +44,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nsa.domain.model.PeopleProfile
 import com.nsa.ui.R
 import com.nsa.ui.theme.HeartIcon
 import com.nsa.ui.theme.LocatonIcon
 import com.nsa.ui.theme.WaveIcon
 import com.nsa.ui.theme.favorite_button_container_color
 import com.nsa.ui.theme.favorite_button_content_color
+import com.nsa.ui.theme.favorite_button_selected_container_color
+import com.nsa.ui.theme.favorite_button_selected_content_color
 import com.nsa.ui.theme.wave_button_container_color
 import com.nsa.ui.theme.wave_button_content_color
 
@@ -61,11 +64,11 @@ import com.nsa.ui.theme.wave_button_content_color
  */
 @Composable
 fun ProfileContent(
-    userName: String,
-    subName: String? = null,
-    isOnline: Boolean,
+    profile:PeopleProfile,
     alignment: Alignment.Horizontal,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    makeFavorite: () -> Unit,
+    sayHi: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -78,8 +81,8 @@ fun ProfileContent(
 
 
         Text(
-            text = "$userName,",
-            style = TextStyle(fontSize = 14.sp,fontWeight = FontWeight.Bold)
+            text = "${profile.name},${profile.age}",
+            style = MaterialTheme.typography.titleMedium
         )
 
         Row(
@@ -89,8 +92,8 @@ fun ProfileContent(
             LocatonIcon()
             Spacer(modifier = Modifier.width(5.dp))
             Text(
-                text = userName,
-                style = TextStyle(fontSize = 12.sp)
+                text = profile.location,
+                style = MaterialTheme.typography.bodySmall
             )
         }
         
@@ -102,13 +105,23 @@ fun ProfileContent(
                 modifier = Modifier
                     .height(25.dp)
                     .weight(1f),
-                onClick = { },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = favorite_button_container_color,
-                    contentColor = favorite_button_content_color,
-                    disabledContainerColor = favorite_button_container_color,
-                    disabledContentColor = favorite_button_content_color
-                )
+                onClick = makeFavorite,
+                colors = if(profile.isFavorite){
+                    ButtonDefaults.buttonColors(
+                        containerColor = favorite_button_selected_container_color,
+                        contentColor = favorite_button_selected_content_color,
+                        disabledContainerColor = favorite_button_selected_container_color,
+                        disabledContentColor = favorite_button_selected_content_color
+                    )
+                }else{
+                    ButtonDefaults.buttonColors(
+                        containerColor = favorite_button_container_color,
+                        contentColor = favorite_button_content_color,
+                        disabledContainerColor = favorite_button_container_color,
+                        disabledContentColor = favorite_button_content_color
+                    )
+                }
+
             ) {
                 HeartIcon()
             }
@@ -120,7 +133,7 @@ fun ProfileContent(
                 modifier = Modifier
                     .height(25.dp)
                     .weight(1f),
-                onClick = { },
+                onClick = sayHi,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = wave_button_container_color,
                     contentColor = wave_button_content_color,

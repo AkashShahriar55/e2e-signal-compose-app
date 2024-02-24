@@ -12,6 +12,10 @@ interface Dimensions {
     val paddingExtraLarge: Dp
     val normalButtonHeight: Dp
     val minButtonWidth: Dp
+    val ShimmerTitleWidth:Dp
+    val ShimmerSubtitleWidth:Dp
+    val ShimmerTitleHeight:Dp
+    val ShimmerSubtitleHeight:Dp
 }
 
 val normalDimensions: Dimensions = object : Dimensions {
@@ -31,4 +35,12 @@ val normalDimensions: Dimensions = object : Dimensions {
         get() = 56.dp
     override val minButtonWidth: Dp
         get() = 120.dp
+    override val ShimmerTitleWidth: Dp
+        get() = 70.dp
+    override val ShimmerSubtitleWidth: Dp
+        get() = 100.dp
+    override val ShimmerTitleHeight: Dp
+        get() = 10.dp
+    override val ShimmerSubtitleHeight: Dp
+        get() = 10.dp
 }

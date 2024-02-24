@@ -44,6 +44,7 @@ appcompat = "1.6.1"
 com-google-android-material-material = "1.11.0"
 fontawsome = "1.0.0"
 shimmer = "1.2.0"
+audiowave = "1.1.1"
 annotation-jvm = "1.7.1"
 
 [plugins]
@@ -98,6 +99,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 lottie = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 fontawsome = {module = "com.github.Gurupreet:FontAwesomeCompose",version.ref = "fontawsome"}
 shimmer = {module = "com.valentinilk.shimmer:compose-shimmer",version.ref = "shimmer"}
+audiowave = {module = "com.github.lincollincol:compose-audiowaveform",version.ref = "audiowave"}
 # Koin for dependency injection
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
@@ -118,7 +120,8 @@ compose = [
     "activity-compose",
     "compose-ui-util",
     "compose-ui-icons",
-    "fontawsome"
+    "fontawsome",
+    "shimmer"
 ]
 
 compose-debug = [

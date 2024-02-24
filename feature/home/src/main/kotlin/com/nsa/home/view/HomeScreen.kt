@@ -33,12 +33,14 @@ import com.nsa.ui.component.ScreenBackground
 @Composable
 fun HomeScreen(
     nestedNavGraph: @Composable () -> Unit,
-    bottomBar: @Composable () -> Unit
+    bottomBar: @Composable () -> Unit,
+    topBar:@Composable () -> Unit = {},
 ) {
 
 
 
     Scaffold(
+        topBar = topBar,
         bottomBar = bottomBar
     ) {
         ScreenBackground(

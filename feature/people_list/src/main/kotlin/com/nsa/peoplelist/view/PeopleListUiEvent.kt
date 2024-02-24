@@ -8,7 +8,7 @@ import com.nsa.ui.event.UIEvent
 
 
 sealed class PeopleListUiEvent:UIEvent {
-    object MakeFavorite:PeopleListUiEvent()
-    object SayHi:PeopleListUiEvent()
+    class MakeFavorite(val id:Int):PeopleListUiEvent()
+    class SayHi(val id:Int):PeopleListUiEvent()
 
 }

@@ -18,7 +18,8 @@ val fakeUser = UserProfile(
     name = "Joe Black",
     nickname = "@nickname",
     status = true,
-    photo = Uri.parse("https://media.istockphoto.com/id/1090878494/photo/close-up-portrait-of-young-smiling-handsome-man-in-blue-polo-shirt-isolated-on-gray-background.jpg?b=1&s=170667a&w=0&k=20&c=c3TaqVe9-0EcHl7mjO-9YChSvGBDhvzUai6obs1Ibz4=")
+    photo = Uri.parse("https://media.istockphoto.com/id/1090878494/photo/close-up-portrait-of-young-smiling-handsome-man-in-blue-polo-shirt-isolated-on-gray-background.jpg?b=1&s=170667a&w=0&k=20&c=c3TaqVe9-0EcHl7mjO-9YChSvGBDhvzUai6obs1Ibz4="),
+    location = "Bali,Indonesia"
 )
 
 val fakeChatList = arrayListOf(

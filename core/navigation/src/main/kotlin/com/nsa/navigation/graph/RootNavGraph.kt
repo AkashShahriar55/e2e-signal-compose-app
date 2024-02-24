@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.nsa.navigation.Screen
 import com.nsa.navigation.authenticationGraph
+import com.nsa.navigation.chatScreen
 import com.nsa.navigation.ext.navigateTo
 import com.nsa.navigation.homeNavGraph
 import com.nsa.navigation.onBoardingNavGraph
@@ -66,5 +67,10 @@ fun RootNavGraph(
 
         //Root screens
         subscriptionScreen(onNavigateBack = navigateBack)
+
+        chatScreen(
+            onNavigateTo = navController::navigateTo,
+            onNavigateBack = navController::navigateUp
+        )
     }
 }

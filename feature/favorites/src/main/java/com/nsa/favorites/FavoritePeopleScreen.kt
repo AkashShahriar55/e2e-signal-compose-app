@@ -15,20 +15,20 @@
  * limitations under the License.
  *
  */
-package com.nsa.people.view
+package com.nsa.favorites
 
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.nsa.peoplelist.view.PeopleListScreen
+import com.nsa.peoplelist.view.PeopleListUIState
+import com.nsa.ui.component.SimpleTopBar
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Host for People list and People profile
@@ -37,18 +37,30 @@ import androidx.compose.ui.unit.dp
  *
  */
 @Composable
-fun PeopleScreen(
-    topBar: @Composable () -> Unit,
-    peopleListScreen: @Composable () -> Unit
+fun FavoritePeopleScreen(
+    stateFlow: StateFlow<PeopleListUIState>,
+    makeFavorite: (profileId: Int) -> Unit,
+    sayHi: (profileId: Int) -> Unit,
+    onNavigateToProfile: (profileId: Int) -> Unit
 ) {
 
+    Scaffold(
+        topBar = { SimpleTopBar(title = "Favorite",onBackButtonClicked= {},onSearchButtonClicked= {}) },
+        contentWindowInsets = WindowInsets.statusBars
+    ){
+        Box(
+            modifier = Modifier.padding(it).padding(24.dp,24.dp,24.dp,0.dp)
+        ){
+            PeopleListScreen(
+                stateFlow,
+                onNavigateToProfile = onNavigateToProfile,
+                makeFavorite,
+                sayHi
+            )
+        }
 
-    Column(
-        modifier = Modifier.padding(20.dp,20.dp,20.dp,0.dp),
-    ) {
-        topBar()
-        peopleListScreen()
     }
+
 }
 
 

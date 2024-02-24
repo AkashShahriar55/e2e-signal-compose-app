@@ -24,7 +24,7 @@ import androidx.navigation.compose.NavHost
 import com.nsa.navigation.Screen
 import com.nsa.navigation.chatListScreen
 import com.nsa.navigation.findPeopleScreen
-import com.nsa.navigation.peopleNavGraph
+import com.nsa.navigation.favoritePeopleNavGraph
 import com.nsa.navigation.profileScreen
 
 /**
@@ -46,8 +46,8 @@ fun HomeNavGraph(
     ) {
 
         findPeopleScreen(onNavigateToRoot)
-        chatListScreen()
-        peopleNavGraph(onNavigateToRoot)
+        chatListScreen(onNavigateToRoot)
+        favoritePeopleNavGraph(onNavigateToRoot)
         profileScreen(onNavigateToRoot = onNavigateToRoot)
 
     }

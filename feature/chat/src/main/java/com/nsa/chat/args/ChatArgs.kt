@@ -15,28 +15,20 @@
  * limitations under the License.
  *
  */
-package com.nsa.peoplelist.view
+package com.nsa.chat.args
 
-import com.nsa.domain.model.PeopleProfile
-import com.nsa.ui.state.UIState
+import androidx.lifecycle.SavedStateHandle
 
 /**
- * UI state for [com.nsa.peoplelist.view.PeopleListScreen]
  *
  * Created on Feb 04, 2023.
  *
  */
+class ChatArgs(val conversationId: Int) {
+    constructor(savedStateHandle: SavedStateHandle) :
+            this(checkNotNull(savedStateHandle[CONVERSATION_ID_ARG]) as Int)
 
-
-sealed interface PeopleProfileUIState:UIState {
-
-    object Empty : PeopleProfileUIState
-
-    object Loading : PeopleProfileUIState
-
-    class Success(val profileList : List<PeopleProfile>) : PeopleProfileUIState
-
-    class Fail(val throwable: Throwable) : PeopleProfileUIState
+    companion object {
+        const val CONVERSATION_ID_ARG = "conversationId"
+    }
 }
-
-

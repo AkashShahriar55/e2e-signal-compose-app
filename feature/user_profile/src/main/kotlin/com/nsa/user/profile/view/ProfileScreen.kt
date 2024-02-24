@@ -98,10 +98,10 @@ fun ProfileScreen(
                 ).show()
             }
 
-            UserProfile("", "", false, Uri.EMPTY)
+            UserProfile("", "", false, Uri.EMPTY,"")
         }
 
-        else ->  UserProfile("", "", false, Uri.EMPTY)
+        else ->  UserProfile("", "", false, Uri.EMPTY,"")
     }
 
     ScreenBackground(
@@ -148,15 +148,13 @@ fun ProfileScreen(
                         }
                 )
 
-                ProfileContent(
-                    userName = user.name,
-                    subName = user.nickname,
-                    isOnline = user.status,
-                    alignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
+//                ProfileContent(
+//                    profile = user,
+//                    alignment = Alignment.CenterHorizontally,
+//                    modifier = Modifier
+//                        .padding(8.dp)
+//                        .align(Alignment.CenterHorizontally)
+//                )
 
 
 
