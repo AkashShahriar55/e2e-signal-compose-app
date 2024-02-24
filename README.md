@@ -43,10 +43,10 @@
 ## Author:
 
 <a href="https://github.com/AkashShahriar55" target="_blank">
-  <img src="https://gravatar.com/akashshahriar55?s=400" width="70" align="left">
+  <img src="https://gravatar.com/userimage/183654737/19d8e05e3bf4a6c851fc6ce05df09ba4.jpeg?size=400" width="70" align="left">
 </a>
 
-**Dmitri Chernysh**
+**Akash Shahriar**
 
 
 [![Linkedin](https://img.shields.io/badge/-linkedin-0A66C2?logo=linkedin&style=for-the-badge&logoColor=white)](https://www.linkedin.com/in/akash-shahriar-784362194/)
