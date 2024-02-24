@@ -26,13 +26,6 @@
 * MVI + modularization with a clean architecture
 * [Circle CI](https://circleci.com/) for continuous integration and delivery
 
-##
-## UI testing with [Maestro](https://maestro.mobile.dev/):
-
-* Install Maestro: run in terminal ```curl -Ls "https://get.maestro.mobile.dev" | bash```
-* Install the app on emulator (doesn't work with physical device)
-* Run the flow: run in terminal ```maestro test -c maestro/people-profile-flow.yaml```
-* [Sample config](maestro/people-profile-flow.yaml)
 
 ##
 ## Modularization
