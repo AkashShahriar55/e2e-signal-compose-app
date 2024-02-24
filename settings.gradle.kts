@@ -1,5 +1,8 @@
 import java.net.URI
 
+include(":core:data")
+
+
 include(":feature:chat")
 
 
