@@ -10,6 +10,6 @@ sealed interface RegistrationUiState:UIState {
 
     class RegistrationSuccess() : RegistrationUiState
 
-    class Error(val throwable: Throwable) : RegistrationUiState
+    class Error(val throwable: Throwable?) : RegistrationUiState
 
 }

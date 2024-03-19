@@ -1,5 +1,11 @@
 package com.nsa.signin
 
+import android.app.Activity
+import android.content.Context
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.ActivityResultRegistryOwner
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -33,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nsa.signin.event.LoginUiEvent
@@ -49,6 +57,19 @@ import com.nsa.ui.theme.GoogleIcon
 import kotlinx.coroutines.launch
 
 
+
+@Composable
+fun SocialAuthScreen(
+    content: @Composable (Context, ActivityResultRegistry) -> Unit
+){
+
+    val context = LocalContext.current
+    val owner = LocalContext.current as ActivityResultRegistryOwner
+    val activityResultRegistry = owner.activityResultRegistry
+    content.invoke(context,activityResultRegistry)
+}
+
+
 @Composable
 fun SocialButtons(
     isLight:Boolean = true,
@@ -56,6 +77,8 @@ fun SocialButtons(
 ){
 
     val color = if(isLight) Color.Black else Color.White
+
+
 
 
     Row(
@@ -127,7 +150,7 @@ fun OrDivider(){
 
 @Composable
 fun  LoginLandingScreen(
-    loginViewModel: LoginViewModel = viewModel(),
+    loginViewModel: LoginViewModel = hiltViewModel(),
     onNavigateToRegistration: () -> Unit,
     onNavigateToLoginWithEmail: () -> Unit,
     onNavigateToAuthenticatedRoute: () -> Unit
@@ -138,13 +161,14 @@ fun  LoginLandingScreen(
 
     val uiState by loginViewModel.uiState.collectAsStateWithLifecycle()
 
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     val scope = rememberCoroutineScope()
 
     when(uiState){
         is LoginUiState.Error -> {
-            (uiState as LoginUiState.Error).throwable.message?.let {
+            (uiState as LoginUiState.Error).throwable?.message?.let {
                 LaunchedEffect(1){
                     scope.launch {
                         snackbarHostState.showSnackbar(it)
@@ -172,104 +196,106 @@ fun  LoginLandingScreen(
 
 
 
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
-            },
-            containerColor = MaterialTheme.colorScheme.inverseSurface
-        ) {
-
-
-
-            Box{
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(id = com.nsa.ui.R.drawable.top_back),
-                    contentDescription = "background shade",
-                    contentScale = ContentScale.FillBounds
-                )
-            }
-
-            // Full Screen Content
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .navigationBarsPadding()
-                    .imePadding()
-                    .padding(20.dp)
-                    .padding(it),
-                horizontalAlignment = Alignment.CenterHorizontally
+        SocialAuthScreen { context , registry->
+            Scaffold(
+                snackbarHost = {
+                    SnackbarHost(hostState = snackbarHostState)
+                },
+                containerColor = MaterialTheme.colorScheme.inverseSurface
             ) {
 
-
-                Text(
-                    modifier = Modifier.padding(20.dp),
-                    text = "Logo Here"
-                )
-
-
-                Text(
-                    style = MaterialTheme.typography.displayLarge,
-                    text = stringResource(id = R.string.connect_friends),
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(top = 30.dp, bottom = 30.dp)
-                        .fillMaxWidth(),
-                    style = TextStyle(fontSize = 16.sp, textAlign = TextAlign.Start),
-                    text = stringResource(R.string.our_chat_app)
-                )
-
-
-
-                SocialButtons(false,
-                    onSocialLogin = {
-                        loginViewModel.onUiEvent(LoginUiEvent.SocialMediaLogin(it))
-                    })
-
-                OrDivider()
-
-
-
-
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp)
-                        .height(48.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    onClick = {
-                        onNavigateToRegistration()
-                    },
-                    colors = ButtonDefaults.elevatedButtonColors()
-                ) {
-                    Text(
-                        text = "Sign up with email",
-                        style = MaterialTheme.typography.titleMedium
+                Box{
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        painter = painterResource(id = com.nsa.ui.R.drawable.top_back),
+                        contentDescription = "background shade",
+                        contentScale = ContentScale.FillBounds
                     )
                 }
 
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                // Full Screen Content
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .navigationBarsPadding()
+                        .imePadding()
+                        .padding(20.dp)
+                        .padding(it),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(){
+
+
+                    Text(
+                        modifier = Modifier.padding(20.dp),
+                        text = "Logo Here"
+                    )
+
+
+                    Text(
+                        style = MaterialTheme.typography.displayLarge,
+                        text = stringResource(id = R.string.connect_friends),
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 30.dp, bottom = 30.dp)
+                            .fillMaxWidth(),
+                        style = MaterialTheme.typography.labelLarge,
+                        text = stringResource(R.string.our_chat_app)
+                    )
+
+
+
+                    SocialButtons(false,
+                        onSocialLogin = {
+                            loginViewModel.onUiEvent(LoginUiEvent.SocialMediaLogin(it,context,registry))
+                        })
+
+                    OrDivider()
+
+
+
+
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp)
+                            .height(48.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        onClick = {
+                            onNavigateToRegistration()
+                        },
+                        colors = ButtonDefaults.elevatedButtonColors()
+                    ) {
                         Text(
-                            text = "Existing account?",
-                        )
-                        Text(
-                            modifier = Modifier.clickable {
-                                onNavigateToLoginWithEmail()
-                            },
-                            text = " Log in",
-                            style =  MaterialTheme.typography.titleMedium
+                            text = "Sign up with email",
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
 
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(){
+                            Text(
+                                text = "Existing account?",
+                            )
+                            Text(
+                                modifier = Modifier.clickable {
+                                    onNavigateToLoginWithEmail()
+                                },
+                                text = " Log in",
+                                style =  MaterialTheme.typography.titleSmall
+                            )
+                        }
+
+                    }
                 }
             }
+
         }
+
 
 
 
@@ -283,7 +309,7 @@ fun  LoginLandingScreen(
 
 @Composable
 fun EmailLoginScreen(
-    loginViewModel: LoginViewModel = viewModel(),
+    loginViewModel: LoginViewModel = hiltViewModel(),
     onNavigateToForgotPassword: () -> Unit,
     onNavigateToAuthenticatedRoute: () -> Unit,
     onNavigateBack: () -> Unit
@@ -301,11 +327,9 @@ fun EmailLoginScreen(
 
 
 
-
-
     when(uiState){
         is LoginUiState.Error -> {
-            (uiState as LoginUiState.Error).throwable.message?.let {
+            (uiState as LoginUiState.Error).throwable?.message?.let {
                 LaunchedEffect(1){
                     scope.launch {
                         snackbarHostState.showSnackbar(it)
@@ -327,128 +351,131 @@ fun EmailLoginScreen(
         }
     } else {
 
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
-            },
-            contentWindowInsets = WindowInsets.Companion.statusBars
-        ){ it ->
-            it
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .navigationBarsPadding()
-                    .imePadding()
-                    .padding(it)
-                    .padding(20.dp)
-                    .verticalScroll(scrollableState)
-                ,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(0.dp, 30.dp)
-                        .align(Alignment.Start)
-                        .clickable {
-                            onNavigateBack()
-                        },
-                    painter = painterResource(id = com.nsa.ui.R.drawable.back), // Replace "your_vector_asset" with the actual name of your vector asset resource
-                    contentDescription = "back Icon" // Provide a description for accessibility
-                )
-
+        SocialAuthScreen { context , registry->
+            Scaffold(
+                snackbarHost = {
+                    SnackbarHost(hostState = snackbarHostState)
+                }
+            ){ it ->
+                it
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp),
+                        .fillMaxSize()
+                        .navigationBarsPadding()
+                        .imePadding()
+                        .padding(it)
+                        .padding(20.dp)
+                        .verticalScroll(scrollableState)
+                    ,
                     horizontalAlignment = Alignment.CenterHorizontally
-
                 ) {
-
-                    Text(
-                        modifier = Modifier,
-                        text = "Log in to Chatbox",
-                        style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    )
-
-                    Text(
+                    Icon(
                         modifier = Modifier
-                            .padding(16.dp),
-                        text = "Welcome back! Sign in using your social\n account or email to continue us",
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Center,
-                            color = Color(0xff797C7B)
-                        )
+                            .padding(0.dp, 30.dp)
+                            .align(Alignment.Start)
+                            .clickable {
+                                onNavigateBack()
+                            },
+                        painter = painterResource(id = com.nsa.ui.R.drawable.back), // Replace "your_vector_asset" with the actual name of your vector asset resource
+                        contentDescription = "back Icon" // Provide a description for accessibility
                     )
 
-                    SocialButtons{
-                        loginViewModel.onUiEvent(LoginUiEvent.SocialMediaLogin(it))
-                    }
-
-                    OrDivider()
-
-                    EmailTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = loginState.email,
-                        onValueChange = {value ->
-                            loginViewModel.onUiEvent(LoginUiEvent.EmailOrMobileChanged(value))
-                        },
-                        label = "Your email",
-                        isError = loginState.errorState.emailOrMobileErrorState.hasError,
-                        errorText = stringResource(id = loginState.errorState.emailOrMobileErrorState.errorMessage)
-                    )
-
-                    PasswordTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        onValueChange = { value-> loginViewModel.onUiEvent(LoginUiEvent.PasswordChanged(value)) },
-                        value = loginState.password,
-                        label = "Password",
-                        isError = loginState.errorState.passwordErrorState.hasError,
-                        errorText = stringResource(id = loginState.errorState.passwordErrorState.errorMessage)
-                    )
-
-
-
-
-                    Spacer(modifier = Modifier.height(170.dp))
-                    Button(
-                        enabled = loginState.isSubmitButtonEnabled,
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp)
-                            .height(48.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        onClick = {
-                            loginViewModel.onUiEvent(LoginUiEvent.Submit)
-                        }
+                            .padding(top = 20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+
                     ) {
+
                         Text(
-                            text = "Log in",
+                            modifier = Modifier,
+                            text = "Log in to Chatbox",
+                            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        )
+
+                        Text(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            text = "Welcome back! Sign in using your social\n account or email to continue us",
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Center,
+                                color = Color(0xff797C7B)
+                            )
+                        )
+
+                        SocialButtons{
+                            loginViewModel.onUiEvent(LoginUiEvent.SocialMediaLogin(it,context,registry))
+                        }
+
+                        OrDivider()
+
+                        EmailTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = loginState.email,
+                            onValueChange = {value ->
+                                loginViewModel.onUiEvent(LoginUiEvent.EmailOrMobileChanged(value))
+                            },
+                            label = "Your email",
+                            isError = loginState.errorState.emailOrMobileErrorState.hasError,
+                            errorText = stringResource(id = loginState.errorState.emailOrMobileErrorState.errorMessage)
+                        )
+
+                        PasswordTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            onValueChange = { value-> loginViewModel.onUiEvent(LoginUiEvent.PasswordChanged(value)) },
+                            value = loginState.password,
+                            label = "Password",
+                            isError = loginState.errorState.passwordErrorState.hasError,
+                            errorText = stringResource(id = loginState.errorState.passwordErrorState.errorMessage)
+                        )
+
+
+
+
+                        Spacer(modifier = Modifier.height(170.dp))
+                        Button(
+                            enabled = loginState.isSubmitButtonEnabled,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            onClick = {
+                                loginViewModel.onUiEvent(LoginUiEvent.Submit)
+                            }
+                        ) {
+                            Text(
+                                text = "Log in",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
+
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(16.dp)
+                                .clickable {
+                                    onNavigateToForgotPassword()
+                                },
+                            text = "Forgot password?",
                             style = MaterialTheme.typography.titleMedium
                         )
+
+
+
                     }
 
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(16.dp)
-                            .clickable {
-                                onNavigateToForgotPassword()
-                            },
-                        text = "Forgot password?",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+
 
 
 
                 }
-
-
-
-
-
             }
         }
+
+
 
     }
 

@@ -16,7 +16,6 @@ kotlin-serialization = "1.4.1"
 android-core-ktx = "1.12.0"
 activity = "1.8.2"
 navigation = "2.7.6"
-retrofit = "2.9.0"
 room = "2.4.3"
 lifecycle = "2.7.0"
 compose-bom = "2024.02.00"
@@ -27,6 +26,8 @@ material = "1.4.3"
 koin = "3.5.3"
 koin-compose = "3.5.3"
 coroutines-android = "1.7.3"
+gmsPlugin = "4.4.1"
+playService = "21.0.0"
 
 # test libraries
 test-junit = "4.13.2"
@@ -48,14 +49,50 @@ audiowave = "1.1.1"
 annotation-jvm = "1.7.1"
 org-jetbrains-kotlin-jvm = "1.9.22"
 
+hilt = "2.50"
+hilt-compose = "1.0.0"
+hiltExt = "1.1.0"
+
+ksp = "1.9.21-1.0.16"
+
+secrets = "2.0.1"
+
+#Firebase
+firebaseBom = "32.7.2"
+firebaseCrashlyticsPlugin = "2.9.9"
+firebasePerfPlugin = "1.4.2"
+
+#Networking
+gson = "2.10.1"
+retrofit = "2.9.0"
+retrofitKotlinxSerializationJson = "1.0.0"
+okhttp = "4.12.0"
+
+androidxDataStore = "1.0.0"
+protobufPlugin = "0.9.4"
+protobuf = "3.25.2"
+
+socketIo = "1.0.0"
+
 [plugins]
 
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
+firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerfPlugin" }
+gms = { id = "com.google.gms.google-services", version.ref = "gmsPlugin" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+
+# Plugins defined by this project
+nsa-android-hilt = { id = "nsa.android.hilt", version = "unspecified" }
+nsa-android-application-firebase = { id = "nsa.android.application.firebase", version = "unspecified" }
 
 [libraries]
 
@@ -71,7 +108,8 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 gradle-api = { module = "com.android.tools.build:gradle-api", version.ref = "android-gradle" }
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines-android" }
-
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 # Compose
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
@@ -111,7 +149,49 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "com-google-android-material-material" }
 androidx-annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", version.ref = "annotation-jvm" }
 
+# dependency injection
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
+hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
+hilt-compose = { module = "androidx.hilt:hilt-navigation-compose",  version.ref = "hilt-compose" }
 
+
+# Dependencies of the included build-logic
+#android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+#android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
+firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
+#kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+#room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+#work-testing = { group = "androidx.work", name = "work-testing", version = "2.9.0" }
+
+
+#firebase
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-cloud-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+play-service = { module = "com.google.android.gms:play-services-auth",  version.ref = "playService" }
+
+# networking
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerializationJson" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+retrofit-converter = { module =  "com.squareup.retrofit2:converter-gson" , version.ref = "retrofit"}
+
+# data store
+androidx-dataStore-core = { group = "androidx.datastore", name = "datastore", version.ref = "androidxDataStore" }
+protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+
+# socket
+socket-io = { module = "io.socket:socket.io-client", version.ref = "socketIo" }
 
 [bundles]
 compose = [
@@ -123,7 +203,8 @@ compose = [
     "compose-ui-util",
     "compose-ui-icons",
     "fontawsome",
-    "shimmer"
+    "shimmer",
+
 ]
 
 compose-debug = [

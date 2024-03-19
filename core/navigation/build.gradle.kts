@@ -27,4 +27,6 @@ dependencies {
     implementation(projects.feature.signup)
     implementation(projects.feature.findPeople)
     implementation(projects.feature.favorites)
+
+    implementation(libs.hilt.compose)
 }

@@ -1,5 +1,23 @@
 import java.net.URI
 
+include(":core:socket")
+
+
+include(":core:datastore-proto")
+
+
+include(":core:setting")
+
+
+include(":core:datastore")
+
+
+include(":core:network")
+
+
+include(":core:data")
+
+
 
 include(":feature:chat")
 

@@ -6,7 +6,9 @@ import com.nsa.domain.model.fakeUserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
-class FetchUserProfileUseCase: BaseCoroutinesUseCase<UserProfile, Any>(Dispatchers.IO) {
+class FetchUserProfileUseCase(
+
+): BaseCoroutinesUseCase<UserProfile, Any>(Dispatchers.IO) {
     override suspend fun buildUseCase(params: Any?): UserProfile {
         delay(2000)
         return fakeUserProfile

@@ -20,6 +20,7 @@ package com.nsa.navigation
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -60,7 +61,6 @@ import com.nsa.signin.LoginViewModel
 import com.nsa.signin.di.featureLoginModule
 import com.nsa.signup.RegistrationScreen
 import com.nsa.signup.RegistrationViewModel
-import com.nsa.signup.di.featureRegistrationModule
 import com.nsa.subscription.SubscriptionScreen
 import com.nsa.user.profile.di.featureUserProfileModule
 import com.nsa.user.profile.view.ProfileScreen
@@ -325,11 +325,8 @@ fun NavGraphBuilder.signInScreen(onNavigateTo: (Screen) -> Unit,onNavigateToRoot
         route = Screen.SignIn.route
     ) {
 
-        loadKoinModules(featureLoginModule)
-        val viewModel: LoginViewModel by koinScope<LoginViewModel>().inject()
 
         LoginLandingScreen(
-            viewModel,
             onNavigateToRegistration = { onNavigateTo(Screen.SignUp)},
             onNavigateToLoginWithEmail = { onNavigateTo(Screen.SignInWithEmail) },
             onNavigateToAuthenticatedRoute = {
@@ -345,11 +342,8 @@ fun NavGraphBuilder.signInWithEmailScreen(onNavigateTo: (Screen) -> Unit,onNavig
         route = Screen.SignInWithEmail.route
     ) {
 
-        loadKoinModules(featureLoginModule)
-        val viewModel: LoginViewModel by koinScope<LoginViewModel>().inject()
 
         EmailLoginScreen(
-            viewModel,
             onNavigateBack = { onNavigateBack()},
             onNavigateToForgotPassword = { /*TODO*/ },
             onNavigateToAuthenticatedRoute = {
@@ -365,11 +359,7 @@ fun NavGraphBuilder.signUpScreen(onNavigateBack: () -> Unit, onNavigateToRoot: (
         route = Screen.SignUp.route
     ) {
 
-        loadKoinModules(featureRegistrationModule)
-        val viewModel: RegistrationViewModel by koinScope<RegistrationViewModel>().inject()
-
         RegistrationScreen(
-            viewModel,
             onNavigateBack = { onNavigateBack() },
             onNavigateToAuthenticatedRoute = {
                 Screen.Home.withClearBackStack()

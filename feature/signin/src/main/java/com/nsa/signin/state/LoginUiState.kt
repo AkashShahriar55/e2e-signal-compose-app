@@ -10,6 +10,6 @@ sealed interface LoginUiState:UIState {
 
     class LoginSuccess() : LoginUiState
 
-    class Error(val throwable: Throwable) : LoginUiState
+    class Error(val throwable: Throwable?) : LoginUiState
 
 }

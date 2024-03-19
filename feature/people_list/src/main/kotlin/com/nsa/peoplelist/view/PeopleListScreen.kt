@@ -73,7 +73,7 @@ fun PeopleListScreen(
             is PeopleListUIState.Empty -> NoPeopleFound()
             is PeopleListUIState.Success ->
                 PeopleList(
-                    list = (uiState as PeopleListUIState.Success).profileList,
+                    list = uiState.profileList,
                     onProfileClick = onNavigateToProfile,
                     makeFavorite,
                     sayHi

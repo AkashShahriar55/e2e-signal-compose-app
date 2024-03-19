@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nsa.signup.event.RegistrationUiEvent
@@ -46,7 +47,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RegistrationScreen(
-    registrationViewModel: RegistrationViewModel = viewModel(),
+    registrationViewModel: RegistrationViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToAuthenticatedRoute: () -> Unit
 ) {
@@ -64,7 +65,7 @@ fun RegistrationScreen(
 
     when(uiState){
         is RegistrationUiState.Error -> {
-            (uiState as RegistrationUiState.Error).throwable.message?.let {
+            (uiState as RegistrationUiState.Error).throwable?.message?.let {
                 LaunchedEffect(true){
                     scope.launch {
                         snackbarHostState.showSnackbar(it)
@@ -85,16 +86,13 @@ fun RegistrationScreen(
         Scaffold(
             snackbarHost = {
                 SnackbarHost(hostState = snackbarHostState)
-            },
-            contentWindowInsets = WindowInsets.Companion.statusBars
+            }
         ){ it ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .navigationBarsPadding()
                     .imePadding()
                     .padding(it)
-                    .padding(20.dp, 30.dp)
                     .verticalScroll(scrollableState)
                 ,
                 horizontalAlignment = Alignment.CenterHorizontally

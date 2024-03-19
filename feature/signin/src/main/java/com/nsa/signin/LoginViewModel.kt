@@ -1,8 +1,25 @@
 package com.nsa.signin
 
+import android.app.Activity
+import android.content.Context
 import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.BuildConfig
+import com.nsa.data.repository.AuthRepository
 import com.nsa.domain.model.ValidationResult
+import com.nsa.domain.model.params.GoogleAuthParam
 import com.nsa.signin.event.LoginUiEvent
 import com.nsa.signin.event.SocialType
 import com.nsa.signin.state.LoginErrorState
@@ -12,25 +29,34 @@ import com.nsa.signin.state.emailOrMobileEmptyErrorState
 import com.nsa.signin.state.passwordEmptyErrorState
 import com.nsa.ui.state.ErrorState
 import com.nsa.ui.vm.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import usecases.GoogleAuthUseCase
 import usecases.ValidateEmailUseCase
 import usecases.ValidatePasswordUseCase
+import javax.inject.Inject
 
 /**
  * ViewModel for Login Screen
  */
-class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val googleAuthUseCase: GoogleAuthUseCase
+) : BaseViewModel<LoginUiState, LoginUiEvent>() {
 
 
     private val validateEmailUseCase = ValidateEmailUseCase()
     private val validatePasswordUseCase = ValidatePasswordUseCase()
-
 
     protected val _loginState: MutableStateFlow<LoginState> = MutableStateFlow(LoginState())
     val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
@@ -40,9 +66,17 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>() {
 
 
 
-
-
-
+    init {
+        viewModelScope.launch {
+            authRepository.isLoggedIn.collectLatest { loggedIn->
+                if(loggedIn){
+                    _uiState.update {
+                        LoginUiState.LoginSuccess()
+                    }
+                }
+            }
+        }
+    }
 
 
 
@@ -100,10 +134,12 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>() {
             }
 
             is LoginUiEvent.SocialMediaLogin -> {
-                loginWithSocial(event.socialType)
+                loginWithSocial(event.socialType,event.context,event.registry)
             }
+
         }
     }
+
 
 
     private suspend fun validateEmail(): Boolean {
@@ -157,26 +193,67 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>() {
 
 
 
-    private fun loginWithSocial(socialType: SocialType){
-        viewModelScope.launch{
+    private fun loginWithSocial(socialType: SocialType,context: Context,registry: ActivityResultRegistry){
 
-            _uiState.update {
-                LoginUiState.Loading
+
+        when(socialType){
+            SocialType.Facebook -> {
+
             }
-            delay(2000)
-
-
-
-            if(socialType == SocialType.Apple){
-                _uiState.update {
-                    LoginUiState.Error(Throwable(message = "Sorry can't login"))
+            SocialType.Google -> {
+                viewModelScope.launch {
+                    googleAuthUseCase.execute(GoogleAuthParam(
+                        context,
+                        registry
+                    ))
                 }
-            }else{
-                _uiState.update {
-                    LoginUiState.LoginSuccess()
-                }
+
+            }
+            SocialType.Apple -> {
+
             }
         }
+
+//        viewModelScope.launch{
+//
+//            _uiState.update {
+//                LoginUiState.Loading
+//            }
+//            delay(2000)
+//
+//
+//
+//            if(socialType == SocialType.Apple){
+//                _uiState.update {
+//                    LoginUiState.Error(Throwable(message = "Sorry can't login"))
+//                }
+//            }else{
+//                _uiState.update {
+//                    LoginUiState.LoginSuccess()
+//                }
+//            }
+//        }
+    }
+
+
+
+    private fun getGoogleSignInRequest():BeginSignInRequest{
+        return BeginSignInRequest.builder()
+            .setPasswordRequestOptions(
+                BeginSignInRequest.PasswordRequestOptions.builder()
+                .setSupported(true)
+                .build())
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setSupported(true)
+                // Your server's client ID, not your Android client ID.
+                .setServerClientId("854196966349-t30ds85rsoruflrp5etsavruncjas3fo.apps.googleusercontent.com")
+                // Only show accounts previously used to sign in.
+                .setFilterByAuthorizedAccounts(true)
+                .build())
+            // Automatically sign in when exactly one credential is retrieved.
+            .setAutoSelectEnabled(true)
+            .build();
     }
 
 
@@ -186,18 +263,25 @@ class LoginViewModel : BaseViewModel<LoginUiState, LoginUiEvent>() {
             _uiState.update {
                 LoginUiState.Loading
             }
-            delay(2000)
 
-
-            if(loginState.value.email == "sudo@gmail.com" && loginState.value.password == "root1234"){
-                _uiState.update {
-                    LoginUiState.LoginSuccess()
-                }
-            }else{
-                _uiState.update {
-                    LoginUiState.Error(Throwable(message = "Sorry can't login. Please check your email or password"))
+            authRepository.loginWithEmail(
+                loginState.value.email,
+                loginState.value.password
+            ).collectLatest {result ->
+                result.takeIf { it.isSuccess }?.let {
+                    _uiState.update {
+                        LoginUiState.LoginSuccess()
+                    }
+                } ?: run {
+                    _uiState.update {
+                        LoginUiState.Error(result.exceptionOrNull())
+                    }
                 }
             }
+
+
+
+
 
 
 

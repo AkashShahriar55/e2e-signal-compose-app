@@ -1,6 +1,8 @@
 package com.nsa.signup
 
 import androidx.lifecycle.viewModelScope
+import com.nsa.data.model.SignUpData
+import com.nsa.data.repository.AuthRepository
 import com.nsa.domain.model.ValidationResult
 import com.nsa.signup.state.RegistrationErrorState
 import com.nsa.signup.state.RegistrationState
@@ -13,16 +15,24 @@ import com.nsa.signup.state.passwordEmptyErrorState
 import com.nsa.signup.state.passwordMismatchErrorState
 import com.nsa.ui.state.ErrorState
 import com.nsa.ui.vm.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import usecases.ValidateEmailUseCase
 import usecases.ValidatePasswordUseCase
+import javax.inject.Inject
 
-class RegistrationViewModel  : BaseViewModel<RegistrationUiState, RegistrationUiEvent>() {
+@HiltViewModel
+class RegistrationViewModel  @Inject constructor(
+    private val authRepository: AuthRepository
+)  : BaseViewModel<RegistrationUiState, RegistrationUiEvent>() {
 
 
     private val validateEmailUseCase = ValidateEmailUseCase()
@@ -268,12 +278,26 @@ class RegistrationViewModel  : BaseViewModel<RegistrationUiState, RegistrationUi
             _uiState.update {
                 RegistrationUiState.Loading
             }
-            delay(2000)
 
-
-            _uiState.update {
-                RegistrationUiState.RegistrationSuccess()
+            authRepository.signUpWithEmail(
+                registrationState.value.name,
+                registrationState.value.name,
+                registrationState.value.email,
+                registrationState.value.password,
+            ).collectLatest {result ->
+                if(result.isSuccess){
+                    _uiState.update {
+                        RegistrationUiState.RegistrationSuccess()
+                    }
+                }else{
+                    _uiState.update {
+                        RegistrationUiState.Error(result.exceptionOrNull())
+                    }
+                }
             }
+
+
+
 
 
 

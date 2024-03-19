@@ -5,6 +5,9 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    alias(libs.plugins.nsa.android.hilt)
+    alias(libs.plugins.nsa.android.application.firebase)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -74,10 +77,16 @@ android {
     }
 }
 
+secrets {
+    defaultPropertiesFileName = "secrets.defaults.properties"
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(projects.core.navigation)
+    implementation(projects.core.socket)
+    implementation(projects.core.network)
 
     testApi(libs.bundles.test.common)
 }
